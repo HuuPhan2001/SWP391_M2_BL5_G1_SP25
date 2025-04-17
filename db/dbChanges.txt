@@ -1,0 +1,2 @@
+-----------Thay trong db xong generate ra những gì thay đổi trong db-----------
+-----------------------------Eg: Alter table .....-----------------------------
