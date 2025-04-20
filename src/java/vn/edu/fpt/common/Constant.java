@@ -31,5 +31,6 @@ public class Constant {
     public static final String DELETE_SUCCESS = "Xóa thành công!";
     public static final String DELETE_FAILED = "Xóa thất bại!";
     public static final String NAME_EXIST = "Tên đã tồn tại!";
-
+    public static final String REQUIRED_FIELD = "Không được phép để trống";
+    public static final String LIMITED = "Vượt quá độ dài cho phép";
 }

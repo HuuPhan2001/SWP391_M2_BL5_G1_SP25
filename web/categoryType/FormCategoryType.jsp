@@ -2,10 +2,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
     <head>
-        <title>${category != null ? "Udpate" : "Add"} Category</title>
+        <title>${categoryType != null ? "Udpate" : "Add"} CategoryType Type</title>
         <jsp:include page="../Header.jsp"/>
     </head>
     <body>
+
         <div id="message" class="message-container">
             <c:if test="${not empty successMessage}">
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -21,34 +22,22 @@
         </div>
 
         <input type="text" hidden="true" id="failedCategoryJson" value='${failedCategoryJson}'/>
+
         <div class="card mb-4">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h3 class="mb-0">${category != null ? "Udpate" : "Add"} Category</h3>
+                <h3 class="mb-0">${category != null ? "Udpate" : "Add"} Category Type</h3>
             </div>
             <div class="card-body">
-                <form id="categoryForm" action="${category != null ? 'update-category' : 'create-category'}" method="post">
-                    <c:if test="${category != null}">
-                        <input type="hidden" name="id" value="${category.categoryId}" />
+                <form id="categoryForm" action="${categoryType != null ? 'update-category-type' : 'create-category-type'}" method="post">
+                    <c:if test="${categoryType != null}">
+                        <input type="hidden" name="id" value="${categoryType.categoryTypeId}" />
                     </c:if>
 
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="typeId">Type</label>
-                        <div class="col-sm-10">
-                            <select name="typeId" id="typeId" class="form-select form-select-lg" required>
-                                <c:forEach var="type" items="${categoryTypes}">
-                                    <option value="${type.categoryTypeId}"
-                                            <c:if test="${category != null && category.categoryTypeId == type.categoryTypeId}">selected</c:if>>
-                                        ${type.categoryTypeName}
-                                    </option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                    </div>
 
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="name" >Name<span style="color: red">*</span></label>
+                        <label class="col-sm-2 col-form-label" for="name">Name</label>
                         <div class="col-sm-10">
-                            <input type="text" id="name" class="form-control" name="name" value="${category != null ? category.categoryName : ''}" required />
+                            <input type="text" id="name" class="form-control" name="typeName" value="${categoryType != null ? categoryType.categoryTypeName : ''}" required />
                         </div>
                     </div>
 
@@ -56,22 +45,11 @@
                         <label class="col-sm-2 col-form-label" for="description">Description</label>
                         <div class="col-sm-10">
                             <textarea
-                                name="description"
+                                name="typeDesc"
                                 id="description"
                                 class="form-control"
                                 aria-describedby="basic-icon-default-message2"
-                                >${category != null ? category.categoryDesc : ''}</textarea>
-                        </div>
-                    </div>
-
-                    <!--            <label>Parent (ID):</label>
-                                <input type="number" name="parent" value="${category != null ? category.parent : ''}" />
-                                <br/>-->
-
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="category-banner">Banner</label>
-                        <div class="col-sm-10">
-                            <input type="text" id="category-banner" class="form-control" name="banner" value="${category != null ? category.categoryBanner : ''}" />
+                                >${categoryType != null ? categoryType.categoryTypeDesc : ''}</textarea>
                         </div>
                     </div>
 
@@ -83,8 +61,7 @@
                                 class="form-check-input" 
                                 type="checkbox" 
                                 value="1"
-                                ${category != null && category.status == 1 ? 'checked' : ''}
-                                ${category == null ? 'checked' : ''}
+                                ${categoryType != null && categoryType.status == 1 ? 'checked' : ''}
                                 id="status" />
                             <label class="form-check-label ms-2" for="status">Active</label>
                         </div>
@@ -103,7 +80,7 @@
     </body>
     <script>
         document.getElementById('cancelButton').addEventListener('click', function () {
-            window.location.href = 'list-category';
+            window.location.href = 'list-category-type';
         });
 
         document.getElementById('resetButton').addEventListener('click', function () {

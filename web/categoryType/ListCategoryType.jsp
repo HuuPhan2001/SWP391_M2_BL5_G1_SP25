@@ -5,31 +5,21 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Category List</title>
+        <title>Category Type List</title>
         <jsp:include page="../Header.jsp"/>
     </head>
     <body>
         </br></br></br>
         <h2 class="text-center mb-4">Category List</h2>
         <div class="row">
-            <form method="get" action="category">
+            <form method="get" action="category-type">
                 <input type="hidden" name="action" value="list" />
 
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <input class="form-control" type="text" name="text" placeholder="Search by name" value="${text}" />
                 </div>
-                <div class="col-md-2">
-                    <select name="typeId" class="form-select" >
-                        <option value="">-- Category Type --</option>
-                        <c:forEach var="type" items="${categoryTypes}">
-                            <option value="${type.categoryTypeId}" 
-                                    <c:if test="${typeId != null and typeId == type.categoryTypeId}">selected</c:if>>
-                                ${type.categoryTypeName}
-                            </option>
-                        </c:forEach>
-                    </select>
-                </div>
-                <div class="col-md-2">
+                
+                <div class="col-md-3">
                     <select name="status" class="form-select" >
                         <option value="">-- Status --</option>
                         <option value="1" ${status == 1 ? 'selected' : ''}>Active</option>
@@ -40,7 +30,7 @@
                     <button type="submit" class="btn btn-secondary">Search</button>
                 </div>
                 <div class="col-md-2">
-                    <a href="<%=request.getContextPath()%>/new-category"><button type="button" class="btn btn-success " style="">Add New</button></a>
+                    <a href="<%=request.getContextPath()%>/new-category-type"><button type="button" class="btn btn-success " style="">Add New</button></a>
                 </div>
             </form>
 
@@ -68,7 +58,6 @@
                     <tr>
                         <th>No.</th>
                         <th>Name</th>
-                        <th>Type</th>
                         <th>Status</th>
                         <th>Create At</th>
                         <th>Update At</th>
@@ -77,33 +66,32 @@
                 </thead>
                 <tbody class="table-border-bottom-0">
                     <c:set var="startIndex" value="${(pagination.page - 1) * pagination.size}" />
-                    <c:forEach var="cate" items="${listCategories}" varStatus="loop">
+                    <c:forEach var="type" items="${categoryTypes}" varStatus="loop">
                         <tr>
                             <td>${startIndex + loop.index + 1}</td>
-                            <td>${cate.categoryName}</td>
-                            <td>${cate.categoryTypeName}</td>
+                            <td>${type.categoryTypeName}</td>
                             <td><c:choose>
-                                    <c:when test="${cate.status == 1}"><span class="badge bg-label-success me-1">Active</span></c:when>
+                                    <c:when test="${type.status == 1}"><span class="badge bg-label-success me-1">Active</span></c:when>
                                     <c:otherwise><span class="badge bg-label-danger me-1">Inactive</span></c:otherwise>
                                 </c:choose>
                             </td>
-                            <td>${cate.createAt}</td>
-                            <td>${cate.updateAt}</td>
+                            <td>${type.createAt}</td>
+                            <td>${type.updateAt}</td>
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="edit-category?id=${cate.categoryId}"
+                                        <a class="dropdown-item" href="edit-category-type?id=${type.categoryTypeId}"
                                            ><i class="bx bx-edit-alt me-1"></i> Edit</a
                                         >
                                         <!--                                        <button class="dropdown-item" type="button" data-bs-toggle="modal" 
                                                                                         data-bs-target="#confirmModal"
-                                                                                        onclick="setDeleteId(${cate.categoryId})">
+                                                                                        onclick="setDeleteId(${type.categoryTypeId})">
                                                                                     <i class="bx bx-trash me-1"></i> Delete</button>-->
-                                        <form id="deleteForm" action="delete-category" method="post">
-                                            <input type="hidden" name="id" id="categoryIdDelete" value="${cate.categoryId}" />
+                                        <form id="deleteForm" action="delete-category-type" method="post">
+                                            <input type="hidden" name="id" id="categoryTypeIdDelete" value="${type.categoryTypeId}" />
                                             <button type="submit" class="dropdown-item"><i class="bx bx-trash me-1"></i>Delete</button>
                                         </form>
 
@@ -131,10 +119,10 @@
                         <ul class="pagination">
                             <c:if test="${pagination.page > 1}">
                                 <li class="page-item">
-                                    <a class="page-link" href="category?page=1&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">First</a>
+                                    <a class="page-link" href="category-type?page=1&size=${pagination.size}&text=${text}&status=${status}">First</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="category?page=${pagination.page - 1}&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">Previous</a>
+                                    <a class="page-link" href="category-type?page=${pagination.page - 1}&size=${pagination.size}&text=${text}&status=${status}">Previous</a>
                                 </li>
                             </c:if>
 
@@ -147,7 +135,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <li class="page-item">
-                                            <a class="page-link" href="category?page=${pageNumber}&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">${pageNumber}</a>
+                                            <a class="page-link" href="category-type?page=${pageNumber}&size=${pagination.size}&text=${text}&status=${status}">${pageNumber}</a>
                                         </li>
                                     </c:otherwise>
                                 </c:choose>
@@ -155,10 +143,10 @@
 
                             <c:if test="${pagination.page < pagination.totalPages}">
                                 <li class="page-item">
-                                    <a class="page-link" href="category?page=${pagination.page + 1}&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">Next</a>
+                                    <a class="page-link" href="category-type?page=${pagination.page + 1}&size=${pagination.size}&text=${text}&status=${status}">Next</a>
                                 </li>
                                 <li class="page-item">
-                                    <a class="page-link" href="category?page=${pagination.totalPages}&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">Last</a>
+                                    <a class="page-link" href="category-type?page=${pagination.totalPages}&size=${pagination.size}&text=${text}&status=${status}">Last</a>
                                 </li>
                             </c:if>
                         </ul>
@@ -168,7 +156,7 @@
         </div><!--end col-->
         <div class="page-size d-md-flex align-items-center text-center justify-content-center">
             Show 
-            <select onchange="location.href = 'category?page=1&size=' + this.value + '&text=${text}&typeId=${typeId}&status=${status}'">
+            <select onchange="location.href = 'category-type?page=1&size=' + this.value + '&text=${text}&status=${status}'">
                 <option value="1" ${pagination.size == 1 ? 'selected' : ''}>1</option>
                 <option value="3" ${pagination.size == 3 ? 'selected' : ''}>3</option>
                 <option value="5" ${pagination.size == 5 ? 'selected' : ''}>5</option>
@@ -190,8 +178,8 @@
                         Are you sure you want to delete this?
                     </div>
                     <div class="modal-footer">
-                        <form id="deleteForm" action="delete-category" method="post">
-                            <input type="hidden" name="id" id="categoryIdDelete" />
+                        <form id="deleteForm" action="delete-categoryType" method="post">
+                            <input type="hidden" name="id" id="categoryTypeIdDelete" />
                             <button type="submit" class="btn btn-danger">Yes</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         </form>
@@ -201,7 +189,7 @@
         </div>
         <script>
             function setDeleteId(id) {
-                document.getElementById("categoryIdDelete").value = id;
+                document.getElementById("categoryTypeIdDelete").value = id;
             }
         </script>
     </body>

@@ -10,19 +10,19 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import vn.edu.fpt.service.CategoryService;
 import java.sql.SQLException;
+import vn.edu.fpt.service.CategoryTypeService;
 
 /**
  *
  * @author MTTTT
  */
-public class CategoryServlet extends HttpServlet {
+public class CategoryTypeServlet extends HttpServlet {
 
-    private CategoryService categoryService;
+    private CategoryTypeService categoryTypeService;
 
     public void init() {
-        categoryService = new CategoryService();
+        categoryTypeService = new CategoryTypeService();
     }
 
     @Override
@@ -30,41 +30,37 @@ public class CategoryServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getServletPath();
         System.out.println(action);
-//        User currentUser = getCurrentUser(request);
-//        if (currentUser == null) {
-//            request.getRequestDispatcher("login.jsp").forward(request, response);
-//        }
         try {
             if (action == null) {
-                categoryService.listAllCatePaging(request, response);
+                categoryTypeService.listAllCategoryTypes(request, response);
             } else {
                 switch (action) {
-                    case "/new-category":
-                        categoryService.showNewForm(request, response);
+                    case "/new-category-type":
+                        categoryTypeService.showNewForm(request, response);
                         break;
-                    case "/edit-category":
-                        categoryService.showEditForm(request, response);
+                    case "/edit-category-type":
+                        categoryTypeService.showEditForm(request, response);
                         break;
-                    case "/view-category":
-                        categoryService.showEditForm(request, response);
+                    case "/view-category-type":
+                        categoryTypeService.showEditForm(request, response);
                         break;
-                    case "/delete-category":
-                        categoryService.deleteCategory(request, response);
+                    case "/delete-category-type":
+                        categoryTypeService.deleteCategoryType(request, response);
                         break;
-                    case "/list-category":
-                        categoryService.listAllCatePaging(request, response);
+                    case "/list-category-type":
+                        categoryTypeService.listAllCategoryTypes(request, response);
                         break;
-                    case "/create-category":
-                        categoryService.createCategory(request, response);
+                    case "/create-category-type":
+                        categoryTypeService.createCategoryType(request, response);
                         break;
-                    case "/update-category":
-                        categoryService.updateCategory(request, response);
+                    case "/update-category-type":
+                        categoryTypeService.updateCategoryType(request, response);
                         break;
-                    case "/update-category-status":
-                        categoryService.updateCategoryStatus(request, response);
+                    case "/update-category-type-status":
+                        categoryTypeService.updateCategoryTypeStatus(request, response);
                         break;
                     default:
-                        categoryService.listAllCatePaging(request, response);
+                        categoryTypeService.listAllCategoryTypes(request, response);
                 }
             }
         } catch (SQLException ex) {

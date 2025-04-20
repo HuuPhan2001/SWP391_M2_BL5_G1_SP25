@@ -55,8 +55,8 @@ public class Pagination {
     }
 
     public int getOffset() {
-        int i = (page - 1) * size;
-        return i <= 0 ? 1 : i;
+        int offset = (page - 1) * size;
+        return Math.max(offset, 0);
     }
 
     public void setTotalElements(long totalElements) {
@@ -101,5 +101,4 @@ public class Pagination {
         return "Pagination{" + "page=" + page + ", size=" + size + ", totalPages=" + totalPages + ", totalElements=" + totalElements + ", sortBy=" + sortBy + ", sortDirection=" + sortDirection + ", currentElements=" + currentElements + '}';
     }
 
-    
 }

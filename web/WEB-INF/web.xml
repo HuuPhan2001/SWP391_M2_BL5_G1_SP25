@@ -4,6 +4,14 @@
         <servlet-name>CategoryServlet</servlet-name>
         <servlet-class>vn.edu.fpt.controller.CategoryServlet</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>HomeServlet</servlet-name>
+        <servlet-class>vn.edu.fpt.controller.HomeServlet</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>CategoryTypeServlet</servlet-name>
+        <servlet-class>vn.edu.fpt.controller.CategoryTypeServlet</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>CategoryServlet</servlet-name>
         <url-pattern>/category</url-pattern>
@@ -14,5 +22,25 @@
         <url-pattern>/delete-category</url-pattern>
         <url-pattern>/create-category</url-pattern>
         <url-pattern>/update-category</url-pattern>
+        <url-pattern>/update-category-status</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>HomeServlet</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CategoryTypeServlet</servlet-name>
+        <url-pattern>/category-type</url-pattern>
+        <url-pattern>/list-category-type</url-pattern>
+        <url-pattern>/new-category-type</url-pattern>
+        <url-pattern>/edit-category-type</url-pattern>
+        <url-pattern>/view-category-type</url-pattern>
+        <url-pattern>/create-category-type</url-pattern>
+        <url-pattern>/update-category-type</url-pattern>
+        <url-pattern>/update-category-type-status</url-pattern>
+        <url-pattern>/delete-category-type</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>home</welcome-file>
+    </welcome-file-list>
 </web-app>
