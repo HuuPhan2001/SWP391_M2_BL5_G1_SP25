@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="6.0" xmlns="https://jakarta.ee/xml/ns/jakartaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://jakarta.ee/xml/ns/jakartaee https://jakarta.ee/xml/ns/jakartaee/web-app_6_0.xsd">
+    <servlet>
+        <servlet-name>CategoryServlet</servlet-name>
+        <servlet-class>vn.edu.fpt.controller.CategoryServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CategoryServlet</servlet-name>
+        <url-pattern>/category</url-pattern>
+        <url-pattern>/list-category</url-pattern>
+        <url-pattern>/new-category</url-pattern>
+        <url-pattern>/edit-category</url-pattern>
+        <url-pattern>/view-category</url-pattern>
+        <url-pattern>/delete-category</url-pattern>
+        <url-pattern>/create-category</url-pattern>
+        <url-pattern>/update-category</url-pattern>
+    </servlet-mapping>
+</web-app>
