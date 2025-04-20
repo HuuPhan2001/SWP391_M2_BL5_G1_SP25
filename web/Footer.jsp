@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="footer-class">
-                <p >© SWP391_M2_BL5_SP25_G1 Online Shop || <a href="http://localhost:9999/SWP391_M2_BL5_G1_SP25/HomePage.jsp" target="_blank">Home</a> </p>
+                <p >© SWP391_M2_BL5_SP25_G1 Online Shop || <a href="http://localhost:9999/SWP391_M2_BL5_G1_SP25/HomePage.jsp" >Home</a> </p>
             </div>
         </div>
     </footer>

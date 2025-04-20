@@ -104,7 +104,11 @@ public class Category {
     public void setUpdateAt(Timestamp updateAt) {
         this.updateAt = updateAt;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Category{" + "categoryId=" + categoryId + ", categoryTypeId=" + categoryTypeId + ", categoryName=" + categoryName + ", categoryDesc=" + categoryDesc + ", parent=" + parent + ", categoryBanner=" + categoryBanner + ", status=" + status + ", createAt=" + createAt + ", updateAt=" + updateAt + '}';
+    }
     
 
 }
