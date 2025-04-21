@@ -53,7 +53,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Sam sung, LG, Son
 			</form>
 		</div>
 		<div class="col-md-4 left-account ">
-			<a href="register.html" class="create">Create an account</a>
+			<a href="Register.jsp" class="create">Create an account</a>
 <div class="clearfix"> </div>
 		</div>
 	<div class="clearfix"> </div>
