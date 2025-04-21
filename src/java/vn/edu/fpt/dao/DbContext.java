@@ -4,11 +4,6 @@
  */
 package vn.edu.fpt.dao;
 
-
-/**
- *
- * @author MTTTT
- */
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -26,7 +21,7 @@ public class DbContext {
         try {
             String user = "sa";
             String pass = "123";
-            String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=OnLineShop;encrypt=true;trustServerCertificate=true";
+            String url = "jdbc:sqlserver://localhost\\SQLEXPRESS:1433;databaseName=OnlineShop;encrypt=true;trustServerCertificate=true";
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             connection = DriverManager.getConnection(url, user, pass);
         } catch (ClassNotFoundException | SQLException ex) {
