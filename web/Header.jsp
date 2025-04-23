@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -48,11 +49,20 @@
                                 <input type="submit" value="Go">
                             </form>
                         </div>
-                        <div class="header-left">		
+                        <div class="header-left">
                             <ul>
-                                <li ><a href="Login.jsp"  >Login</a></li>
-                                <li><a  href="register.html"  >Register</a></li>
-
+                                <c:if test="${not empty sessionScope.acc}">
+                                    <li>
+                                    <a style="font-size: 25px" href="userInfo?accId=${sessionScope.acc.userName}">
+                                        Hello ${sessionScope.acc.userName}
+                                    </a>
+                                    </li>
+                                    <li><a style="font-size: 25px" href="logout">Logout</a></li>
+                                </c:if>
+                                    
+                                <c:if test="${empty sessionScope.acc}">
+                                    <li><a style="font-size: 25px" href="LoginPage.jsp">Login</a></li>
+                                </c:if>
                             </ul>
                             <div class="cart box_1">
                                 <a href="checkout.html">
