@@ -6,6 +6,7 @@ package vn.edu.fpt.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -77,22 +78,47 @@ public class LoginServlet extends HttpServlet {
 // Lấy dữ liệu từ form
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+            String remember = request.getParameter("remember"); // checkbox
 
             AccountDAO dao = new AccountDAO();
             User user = dao.getAccount(username, password);
 
             if (user != null) {
-                // Lưu user vào session
                 HttpSession session = request.getSession();
-                session.setAttribute("user", user);
-                // Điều hướng sau khi đăng nhập thành công
-                response.sendRedirect("HomePage.jsp");
-                
+                session.setAttribute("acc", user);
+                Integer roleId = user.getRoleId();
+                if (roleId != null && roleId == 1) {
+                    response.sendRedirect("adminDashboard.jsp");
+                } else if (roleId != null && roleId == 3) {
+                    response.sendRedirect("HomePage.jsp");
+                } else {
+                    response.sendRedirect("error.jsp");
+                }
+                // Nếu người dùng chọn "Remember me", tạo Cookie
+                if ("on".equals(remember)) {
+                    Cookie usernameCookie = new Cookie("username", username);
+                    Cookie passwordCookie = new Cookie("password", password);
+
+                    usernameCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
+                    passwordCookie.setMaxAge(7 * 24 * 60 * 60);
+
+                    response.addCookie(usernameCookie);
+                    response.addCookie(passwordCookie);
+                } else {
+                    // Nếu không chọn remember, xoá cookie cũ (nếu có)
+                    Cookie usernameCookie = new Cookie("username", "");
+                    Cookie passwordCookie = new Cookie("password", "");
+                    usernameCookie.setMaxAge(0);
+                    passwordCookie.setMaxAge(0);
+                    response.addCookie(usernameCookie);
+                    response.addCookie(passwordCookie);
+                }
+
             } else {
                 // Sai thông tin đăng nhập
                 request.setAttribute("error", "Email hoặc mật khẩu không đúng!");
                 request.getRequestDispatcher("Login.jsp").forward(request, response);
-                
+
             }
         } catch (Exception e) {
             // Ghi log ra console để kiểm tra lỗi
