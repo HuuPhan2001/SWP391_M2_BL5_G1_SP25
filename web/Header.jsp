@@ -7,7 +7,7 @@
             <title>Online Shop | Home</title>
             <link href="assets/css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
             <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-            <script src="assets/js/jquery.min.js"></script>
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
             <!-- Custom Theme files -->
             <!--theme-style-->
             <link href="assets/css/style.css" rel="stylesheet" type="text/css" media="all" />	
@@ -32,10 +32,11 @@
 
             <script src="assets/js/config.js"></script>
             <script src="assets/js/jquery.js"></script>
-            <script src="assets/js/bootstrap.js"></script>
             <script src="assets/js/menu.js"></script>
             <script src="assets/js/main.js"></script>
             <script src="assets/js/handler.js"></script>
+            <script src="assets/js/bootstrap.bundle.min.js"></script>
+            <script src="assets/js/responsiveslides.min.js"></script>
     </head>
     <body>
         <div class="header">
@@ -193,6 +194,7 @@
                             <li><a class="color6" href="#">Conact</a></li>
                             <li><a class="color1" href="<%=request.getContextPath()%>/category">Category</a></li>
                             <li><a class="color1" href="<%=request.getContextPath()%>/category-type">CategoryType</a></li>
+                            <li><a class="color1" href="<%=request.getContextPath()%>/product">Product</a></li>
                         </ul> 
                     </div>
 
