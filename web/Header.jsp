@@ -61,7 +61,7 @@
                                 </c:if>
                                     
                                 <c:if test="${empty sessionScope.acc}">
-                                    <li><a style="font-size: 25px" href="LoginPage.jsp">Login</a></li>
+                                    <li><a style="font-size: 25px" href="Login.jsp">Login</a></li>
                                 </c:if>
                             </ul>
                             <div class="cart box_1">
