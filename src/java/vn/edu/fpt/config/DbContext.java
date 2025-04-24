@@ -15,9 +15,9 @@ import java.sql.SQLException;
 public class DbContext implements AutoCloseable{
     private static final String DRIVER = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
 
-    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=OnlineShop;encrypt=true;TrustServerCertificate=True";
+    private static final String URL = "jdbc:sqlserver://localhost:1433;databaseName=OnlineShop;encrypt=true;trustServerCertificate=true";
     private static final String USER = "sa";
-    private static final String PASSWORD = "123456";
+    private static final String PASSWORD = "123";
     public static Connection connection;
 
     public static Connection getConnection() {

@@ -6,11 +6,9 @@ package vn.edu.fpt.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import vn.edu.fpt.dao.AccountDAO;
@@ -20,7 +18,8 @@ import vn.edu.fpt.model.User;
  *
  * @author ADMIN
  */
-public class LoginServlet extends HttpServlet {
+@WebServlet(name = "Register", urlPatterns = {"/Register"})
+public class Register extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -39,10 +38,10 @@ public class LoginServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Login</title>");
+            out.println("<title>Servlet Register</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Login at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Register at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -74,58 +73,61 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-// Lấy dữ liệu từ form
-            String username = request.getParameter("username");
-            String password = request.getParameter("password");
-            String remember = request.getParameter("remember"); // checkbox
+            // Lấy dữ liệu từ form
+        String userName = request.getParameter("username");
+        String phone = request.getParameter("phone");
+        String email = request.getParameter("email");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
 
-            AccountDAO dao = new AccountDAO();
-            User user = dao.getAccount(username, password);
-
-            if (user != null) {
-                HttpSession session = request.getSession();
-                session.setAttribute("acc", user);
-                Integer roleId = user.getRoleId();
-                if (roleId != null && roleId == 1) {
-                    response.sendRedirect("adminDashboard.jsp");
-                } else if (roleId != null && roleId == 3) {
-                    response.sendRedirect("HomePage.jsp");
-                } else {
-                    response.sendRedirect("error.jsp");
-                }
-                // Nếu người dùng chọn "Remember me", tạo Cookie
-                if ("on".equals(remember)) {
-                    Cookie usernameCookie = new Cookie("username", username);
-                    Cookie passwordCookie = new Cookie("password", password);
-
-                    usernameCookie.setMaxAge(7 * 24 * 60 * 60); // 7 ngày
-                    passwordCookie.setMaxAge(7 * 24 * 60 * 60);
-
-                    response.addCookie(usernameCookie);
-                    response.addCookie(passwordCookie);
-                } else {
-                    // Nếu không chọn remember, xoá cookie cũ (nếu có)
-                    Cookie usernameCookie = new Cookie("username", "");
-                    Cookie passwordCookie = new Cookie("password", "");
-                    usernameCookie.setMaxAge(0);
-                    passwordCookie.setMaxAge(0);
-                    response.addCookie(usernameCookie);
-                    response.addCookie(passwordCookie);
-                }
-
-            } else {
-                // Sai thông tin đăng nhập
-                request.setAttribute("error", "Email hoặc mật khẩu không đúng!");
-                request.getRequestDispatcher("Login.jsp").forward(request, response);
-
-            }
-        } catch (Exception e) {
-            // Ghi log ra console để kiểm tra lỗi
-            e.printStackTrace();
-            response.getWriter().println("Có lỗi xảy ra: " + e.getMessage());
+        // Kiểm tra xác nhận mật khẩu
+        if (!password.equals(confirmPassword)) {
+            request.setAttribute("error", "Password and Confirm Password do not match.");
+            request.getRequestDispatcher("Register.jsp").forward(request, response);
+            return;
         }
+
+//        try {
+            AccountDAO dao = new AccountDAO();
+            // Kiểm tra Username đã tồn tại chưa
+            if (dao.isUsernameExists(userName)) {
+                request.setAttribute("error", "Username is already in use.");
+                request.getRequestDispatcher("Register.jsp").forward(request, response);
+                return;
+            }
+            // Kiểm tra email đã tồn tại chưa
+            if (dao.isEmailExists(email)) {
+                request.setAttribute("error", "Email is already in use.");
+                request.getRequestDispatcher("Register.jsp").forward(request, response);
+                return;
+            }
+
+            // Tạo user mới
+            User user = new User();
+            user.setUserName(userName);
+            user.setPhone(phone);
+            user.setUserEmail(email);
+            user.setUserPassword(password); // có thể mã hóa sau nếu cần
+            user.setStatus(1);
+            user.setRoleId(3); // user thường
+
+            boolean success = dao.addAccount(user);
+
+            if (success) {
+                response.sendRedirect("Login.jsp");
+            } else {
+                request.setAttribute("error", "Failed to register. Please try again.");
+                request.getRequestDispatcher("Register.jsp").forward(request, response);
+            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            request.setAttribute("error", "Internal server error.");
+//            request.getRequestDispatcher("register.jsp").forward(request, response);
+//        }
     }
+        
+    
 
     /**
      * Returns a short description of the servlet.

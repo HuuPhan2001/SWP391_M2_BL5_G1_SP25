@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -46,22 +47,31 @@
                             <input type="text" value="Search " onfocus="this.value = '';" onblur="if (this.value == '') {
                                             this.value = 'Search';
                                         }">
-                            <input type="submit" value="Go">
-                        </form>
-                    </div>
-                    <div class="header-left">		
-                        <ul>
-                            <li ><a href="#"  >Login</a></li>
-                            <li><a  href="#"  >Register</a></li>
-
-                        </ul>
-                        <div class="cart box_1">
-                            <a href="#">
-                                <h3> <div class="total">
-                                        <span class="simpleCart_total"></span> (<span id="simpleCart_quantity" class="simpleCart_quantity"></span> items)</div>
-                                    <img src="assets/images/cart.png" alt=""></h3>
-                            </a>
-                            <p><a href="javascript:;" class="simpleCart_empty">Empty Cart</a></p>
+                                <input type="submit" value="Go">
+                            </form>
+                        </div>
+                        <div class="header-left">
+                            <ul>
+                                <c:if test="${not empty sessionScope.acc}">
+                                    <li>
+                                    <a style="font-size: 25px" href="userInfo?accId=${sessionScope.acc.userName}">
+                                        Hello ${sessionScope.acc.userName}
+                                    </a>
+                                    </li>
+                                    <li><a style="font-size: 25px" href="logout">Logout</a></li>
+                                </c:if>
+                                    
+                                <c:if test="${empty sessionScope.acc}">
+                                    <li><a style="font-size: 25px" href="Login.jsp">Login</a></li>
+                                </c:if>
+                            </ul>
+                            <div class="cart box_1">
+                                <a href="checkout.html">
+                                    <h3> <div class="total">
+                                            <span class="simpleCart_total"></span> (<span id="simpleCart_quantity" class="simpleCart_quantity"></span> items)</div>
+                                        <img src="assets/images/cart.png" alt=""></h3>
+                                </a>
+                                <p><a href="javascript:;" class="simpleCart_empty">Empty Cart</a></p>
 
                         </div>
                         <div class="clearfix"> </div>
