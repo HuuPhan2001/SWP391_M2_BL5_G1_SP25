@@ -38,7 +38,7 @@ public class UpdateProfileServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateProfileServlet</title>");            
+            out.println("<title>Servlet UpdateProfileServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet UpdateProfileServlet at " + request.getContextPath() + "</h1>");
@@ -73,7 +73,7 @@ public class UpdateProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         try {
+        try {
             request.setCharacterEncoding("UTF-8");
 
             int userId = Integer.parseInt(request.getParameter("userId"));
@@ -99,6 +99,14 @@ public class UpdateProfileServlet extends HttpServlet {
 
             // Gọi DAO để update
             AccountDAO dao = new AccountDAO();
+
+            if (dao.isEmailExists(email)) {
+                // Ghi lỗi vào session
+                session.setAttribute("error", "Email đã tồn tại.");
+                response.sendRedirect("EditProfile.jsp");
+                return;
+            }
+
             dao.updateUser(currentUser);
 
             // Cập nhật lại session
@@ -111,7 +119,6 @@ public class UpdateProfileServlet extends HttpServlet {
             response.getWriter().println("Có lỗi xảy ra: " + e.getMessage());
         }
     }
-    
 
     /**
      * Returns a short description of the servlet.
