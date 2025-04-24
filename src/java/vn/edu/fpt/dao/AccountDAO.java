@@ -5,9 +5,12 @@
  */
 package vn.edu.fpt.dao;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import vn.edu.fpt.config.DbContext;
+import static vn.edu.fpt.config.DbContext.getConnection;
 import vn.edu.fpt.model.User;
 
 /**
@@ -20,8 +23,7 @@ public class AccountDAO extends DbContext {
         String sql = "SELECT *"
                 + "FROM [user] u "
                 + "WHERE u.user_name = ? AND u.user_password = ?";
-        try {
-            PreparedStatement st = connection.prepareStatement(sql);
+        try (Connection conn = getConnection(); PreparedStatement st = conn.prepareStatement(sql)){
             st.setString(1, username);
             st.setString(2, password);
 
@@ -50,7 +52,7 @@ public class AccountDAO extends DbContext {
     public boolean addAccount(User user) {
         String sql = "INSERT INTO [user] (user_name, user_email, user_password, phone, status, role_id, create_at, update_at) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getUserName());
             ps.setString(2, user.getUserEmail());
             ps.setString(3, user.getUserPassword());
@@ -70,7 +72,7 @@ public class AccountDAO extends DbContext {
 
     public boolean isEmailExists(String email) {
         String sql = "SELECT user_id FROM [user] WHERE user_email = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -82,7 +84,7 @@ public class AccountDAO extends DbContext {
 
     public boolean isUsernameExists(String username) {
         String sql = "SELECT user_id FROM [user] WHERE user_name = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, username);
             ResultSet rs = ps.executeQuery();
             return rs.next();
@@ -94,7 +96,7 @@ public class AccountDAO extends DbContext {
 
     public User getUserAccount(int userId) {
         String sql = "SELECT * FROM [user] WHERE user_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
@@ -124,7 +126,7 @@ public class AccountDAO extends DbContext {
     public boolean updateUser(User user) {
         String sql = "UPDATE [user] SET user_full_name = ?, user_email = ?, phone = ?,"
                 + " address = ?, user_avatar = ?, identification_number = ?, update_at = ? WHERE user_id = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, user.getUserFullName());
             ps.setString(2, user.getUserEmail());
             ps.setString(3, user.getPhone());
