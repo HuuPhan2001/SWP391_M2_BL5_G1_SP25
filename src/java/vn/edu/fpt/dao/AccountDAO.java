@@ -23,7 +23,7 @@ public class AccountDAO extends DbContext {
         String sql = "SELECT *"
                 + "FROM [user] u "
                 + "WHERE u.user_name = ? AND u.user_password = ?";
-        try (Connection conn = getConnection(); PreparedStatement st = conn.prepareStatement(sql)){
+        try (Connection conn = getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setString(1, username);
             st.setString(2, password);
 
@@ -137,6 +137,31 @@ public class AccountDAO extends DbContext {
             ps.setInt(8, user.getUserId());
 
             return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean changePassword(int userId, String newPassword) {
+        String sql = "UPDATE [user] SET user_password = ?, update_at = GETDATE() WHERE user_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean checkOldPassword(int userId, String oldPassword) {
+        String sql = "SELECT user_id FROM [user] WHERE user_id = ? AND user_password = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setString(2, oldPassword);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // Trả về true nếu tìm thấy bản ghi khớp
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
