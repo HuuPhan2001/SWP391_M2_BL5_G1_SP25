@@ -38,45 +38,47 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 
 
         <!--content-->
-        <div class=" container">
-            <div class=" register">
+        <div class="container">
+            <div class="register">
                 <h1>Register</h1>
-                <form> 
+                <form action="Register" method="post"> 
                     <div class="col-md-6 register-top-grid">
-                        <h3>Personal infomation</h3>
+                        <h3>Personal information</h3>
                         <div>
-                            <span>First Name</span>
-                            <input type="text"> 
+                            <span>User Name</span>
+                            <input type="text" name="username" required> 
                         </div>
                         <div>
-                            <span>Last Name</span>
-                            <input type="text"> 
+                            <span>Phone</span>
+                            <input type="text" name="phone" required> 
                         </div>
                         <div>
                             <span>Email Address</span>
-                            <input type="text"> 
+                            <input type="email" name="email" required> 
                         </div>
                         <a class="news-letter" href="#">
-                            <label class="checkbox"><input type="checkbox" name="checkbox" checked=""><i> </i>Sign Up for Newsletter</label>
+                            <label class="checkbox">
+                                <input type="checkbox" name="newsletter" checked><i> </i>Sign Up for Newsletter
+                            </label>
                         </a>
                     </div>
                     <div class="col-md-6 register-bottom-grid">
                         <h3>Login information</h3>
                         <div>
                             <span>Password</span>
-                            <input type="password">
+                            <input type="password" name="password" required>
                         </div>
                         <div>
                             <span>Confirm Password</span>
-                            <input type="password">
+                            <input type="password" name="confirmPassword" required>
                         </div>
-                        <input type="submit" value="submit">
-
+                        <input type="submit" value="Submit">
                     </div>
                     <div class="clearfix"> </div>
                 </form>
             </div>
         </div>
+
         <!--//content-->
         <div class="footer">
             <jsp:include page="Footer.jsp" />		
