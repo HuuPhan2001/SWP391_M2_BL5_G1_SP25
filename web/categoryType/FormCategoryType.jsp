@@ -2,23 +2,29 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
     <head>
-        <title>${categoryType != null ? "Udpate" : "Add"} CategoryType Type</title>
+        <title>${categoryType != null ? "Udpate" : "Add"} Category Type</title>
         <jsp:include page="../Header.jsp"/>
     </head>
     <body>
 
         <div id="message" class="message-container">
             <c:if test="${not empty successMessage}">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible show" role="alert">
                     <i class="bi bi-check-circle-fill me-2"></i>
                     ${successMessage}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                <% 
-    session.removeAttribute("successMessage"); 
-    session.removeAttribute("showSuccessMessage");
-                %>
+                <% session.removeAttribute("successMessage"); %>
             </c:if>
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger alert-dismissible show" role="alert">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                    ${errorMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <% session.removeAttribute("errorMessage"); %>
+            </c:if>
+
         </div>
 
         <input type="text" hidden="true" id="failedCategoryJson" value='${failedCategoryJson}'/>

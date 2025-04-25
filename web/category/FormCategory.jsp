@@ -8,15 +8,22 @@
     <body>
         <div id="message" class="message-container">
             <c:if test="${not empty successMessage}">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible show" role="alert">
                     <i class="bi bi-check-circle-fill me-2"></i>
                     ${successMessage}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <% 
     session.removeAttribute("successMessage"); 
-    session.removeAttribute("showSuccessMessage");
                 %>
+            </c:if>
+            <c:if test="${not empty errorMessage}">
+                <div class="alert alert-danger alert-dismissible show" role="alert">
+                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                    ${errorMessage}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                <% session.removeAttribute("errorMessage"); %>
             </c:if>
         </div>
 
@@ -48,7 +55,9 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="name" >Name<span style="color: red">*</span></label>
                         <div class="col-sm-10">
-                            <input type="text" id="name" class="form-control" name="name" value="${category != null ? category.categoryName : ''}" required />
+                            <input type="text" id="name" class="form-control" name="name" 
+                                   value="${sessionScope.formData.categoryName != null ? sessionScope.formData.categoryName : (category != null ? category.categoryName : '')}" 
+                                   required />
                         </div>
                     </div>
 
@@ -60,7 +69,7 @@
                                 id="description"
                                 class="form-control"
                                 aria-describedby="basic-icon-default-message2"
-                                >${category != null ? category.categoryDesc : ''}</textarea>
+                                >${sessionScope.formData.categoryDesc != null ? sessionScope.formData.categoryDesc : (category != null ? category.categoryDesc : '')}</textarea>
                         </div>
                     </div>
 
@@ -71,7 +80,10 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="category-banner">Banner</label>
                         <div class="col-sm-10">
-                            <input type="text" id="category-banner" class="form-control" name="banner" value="${category != null ? category.categoryBanner : ''}" />
+                            <input type="text" id="category-banner" class="form-control" name="banner" 
+                                   value="${sessionScope.formData.categoryBanner != null ? sessionScope.formData.categoryBanner : (category != null ? category.categoryBanner : '')}
+                                   " 
+                                   />
                         </div>
                     </div>
 
@@ -83,8 +95,8 @@
                                 class="form-check-input" 
                                 type="checkbox" 
                                 value="1"
-                                ${category != null && category.status == 1 ? 'checked' : ''}
-                                ${category == null ? 'checked' : ''}
+                                ${sessionScope.formData.status != null ? sessionScope.formData.status : (category != null && category.status == 1 ? 'checked' : '')}
+                                ${sessionScope.formData.status == null ? 'checked' : (category == null ? 'checked' : '')}
                                 id="status" />
                             <label class="form-check-label ms-2" for="status">Active</label>
                         </div>
@@ -97,6 +109,7 @@
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </div>
+                    <% session.removeAttribute("formData"); %>
                 </form>
             </div>
         </div>

@@ -13,7 +13,7 @@ public class Product {
     private String productName;
     private String productAvatar;
     private String productDesc;
-    private Integer productPrice;
+    private BigDecimal productPrice;
     private Integer productQuantity;
     private int status;
     private Timestamp createAt;
@@ -26,7 +26,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(int productId, String productName, String productAvatar, String productDesc, Integer productPrice, Integer productQuantity, int status, Timestamp createAt, Timestamp updateAt, BigDecimal weight, BigDecimal length, BigDecimal width, BigDecimal height) {
+    public Product(int productId, String productName, String productAvatar, String productDesc, BigDecimal productPrice, Integer productQuantity, int status, Timestamp createAt, Timestamp updateAt, BigDecimal weight, BigDecimal length, BigDecimal width, BigDecimal height) {
         this.productId = productId;
         this.productName = productName;
         this.productAvatar = productAvatar;
@@ -74,11 +74,11 @@ public class Product {
         this.productDesc = productDesc;
     }
 
-    public Integer getProductPrice() {
+    public BigDecimal getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Integer productPrice) {
+    public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
     }
 
@@ -146,4 +146,8 @@ public class Product {
         this.height = height;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" + "productId=" + productId + ", productName=" + productName + ", productAvatar=" + productAvatar + ", productDesc=" + productDesc + ", productPrice=" + productPrice + ", productQuantity=" + productQuantity + ", status=" + status + ", createAt=" + createAt + ", updateAt=" + updateAt + ", weight=" + weight + ", length=" + length + ", width=" + width + ", height=" + height + '}';
+    }
 }

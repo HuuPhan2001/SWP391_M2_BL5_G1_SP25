@@ -4,18 +4,24 @@
  */
 package vn.edu.fpt.common;
 
+import com.cloudinary.utils.ObjectUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import vn.edu.fpt.config.CloudinaryUtil;
 
 /**
  *
  * @author MTTTT
  */
 public class Common {
+
     public static int getIntParameter(HttpServletRequest request, String paramName, int defaultValue) {
         try {
             String param = request.getParameter(paramName);
@@ -24,7 +30,7 @@ public class Common {
             return defaultValue;
         }
     }
-    
+
     public static String getValidSortColumn(String sortBy, Set<String> validColumns, String defaultSort) {
         return validColumns.contains(sortBy) ? sortBy : defaultSort;
     }
@@ -44,5 +50,32 @@ public class Common {
         }
 
         return pstmt;
+    }
+
+    public static String uploadImage(InputStream imageStream, String fileName, String publicIdUrl) throws IOException {
+        try {
+            byte[] imageBytes = imageStream.readAllBytes();
+
+            Map uploadResult = CloudinaryUtil.getCloudinary().uploader().upload(
+                    imageBytes,
+                    ObjectUtils.asMap(
+                            "public_id", publicIdUrl + "/" + fileName,
+                            "resource_type", "auto"
+                    )
+            );
+            return (String) uploadResult.get("secure_url");
+        } catch (IOException e) {
+            throw new IOException("Failed to upload image: " + e.getMessage(), e);
+        } finally {
+            if (imageStream != null) {
+                try {
+                    imageStream.close();
+                } catch (IOException e) {
+                    System.out.println("error");
+                    e.printStackTrace();
+                }
+            }
+
+        }
     }
 }

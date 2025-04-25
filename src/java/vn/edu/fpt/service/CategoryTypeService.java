@@ -56,28 +56,33 @@ public class CategoryTypeService {
     public void createCategoryType(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
         String typeName = request.getParameter("typeName");
         String typeDesc = request.getParameter("typeDesc");
-        int status = Integer.parseInt(request.getParameter("status"));
+        String statusRaw = request.getParameter("status");
+
         CategoryType type = new CategoryType();
         type.setCategoryTypeName(typeName);
         type.setCategoryTypeDesc(typeDesc);
-        type.setStatus(status);
-        List<CategoryType> flag = categoryTypeDao.checkNameExist(type.getCategoryTypeName());
+        type.setStatus((statusRaw != null) ? 1 : 0);
+
+        if (typeName == null || typeName.trim().isEmpty() || typeName.length() > 100) {
+            request.setAttribute("errorMessage", "Tên loại danh mục không được để trống và tối đa 100 ký tự.");
+            request.setAttribute("categoryType", type);
+            response.sendRedirect("new-category-type");
+            return;
+        }
+
+        List<CategoryType> flag = categoryTypeDao.checkNameExist(typeName.trim());
         if (flag != null && !flag.isEmpty()) {
             Gson gson = new Gson();
-            request.getSession().setAttribute("failedCategory", gson.toJson(type));
-
-            request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.NAME_EXIST);
-
-            request.setAttribute("category", type);
-
-            request.getRequestDispatcher("./categoryType/FormCategoryType.jsp").forward(request, response);
-
-        } else {
-            categoryTypeDao.createCategoryType(type);
-            request.getSession().setAttribute("successMessage", Constant.ADD_SUCCESS);
-            response.sendRedirect("category-type");
-            response.sendRedirect("list-category-type");
+            request.getSession().setAttribute("failedCategoryType", gson.toJson(type));
+            request.setAttribute("errorMessage", "Tên loại đã tồn tại.");
+            request.setAttribute("categoryType", type);
+            response.sendRedirect("new-category-type");
+            return;
         }
+
+        categoryTypeDao.createCategoryType(type);
+        request.getSession().setAttribute("successMessage", "Thêm loại danh mục thành công.");
+        response.sendRedirect("list-category-type");
     }
 
     public void updateCategoryType(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, ServletException {
@@ -87,28 +92,35 @@ public class CategoryTypeService {
         String statusRaw = request.getParameter("status");
 
         int status = (statusRaw != null) ? 1 : 0;
+
         CategoryType type = new CategoryType();
         type.setCategoryTypeId(typeId);
         type.setCategoryTypeName(typeName);
         type.setCategoryTypeDesc(typeDesc);
         type.setStatus(status);
-        
-        List<CategoryType> flag = categoryTypeDao.checkNameExist(type.getCategoryTypeName());
-        if (flag != null && !flag.isEmpty()) {
-            Gson gson = new Gson();
-            request.getSession().setAttribute("failedCategory", gson.toJson(type));
 
-            request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.NAME_EXIST);
-
-            request.setAttribute("category", type);
-
-            request.getRequestDispatcher("./categoryType/FormCategoryType.jsp").forward(request, response);
-
-        } else {
-            categoryTypeDao.updateCategoryType(type);
-            request.getSession().setAttribute("successMessage", Constant.ADD_SUCCESS);
-            response.sendRedirect("category-type");
+        if (typeName == null || typeName.trim().isEmpty() || typeName.length() > 100) {
+            request.setAttribute("errorMessage", "Tên loại danh mục không được để trống và tối đa 100 ký tự.");
+            request.setAttribute("categoryType", type);
+            response.sendRedirect("edit-category-type?id=" + typeId);
+            return;
         }
+
+        List<CategoryType> flag = categoryTypeDao.checkNameExist(typeName.trim());
+        boolean isDuplicate = flag.stream().anyMatch(ct -> ct.getCategoryTypeId() != typeId);
+
+        if (isDuplicate) {
+            Gson gson = new Gson();
+            request.getSession().setAttribute("failedCategoryType", gson.toJson(type));
+            request.setAttribute("errorMessage", "Tên loại đã tồn tại.");
+            request.setAttribute("categoryType", type);
+            response.sendRedirect("edit-category-type?id=" + typeId);
+            return;
+        }
+
+        categoryTypeDao.updateCategoryType(type);
+        request.getSession().setAttribute("successMessage", "Cập nhật loại danh mục thành công.");
+        response.sendRedirect("list-category-type");
     }
 
     public void deleteCategoryType(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException {

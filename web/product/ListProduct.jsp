@@ -12,11 +12,11 @@
         </br></br></br>
         <h2 class="text-center mb-4">Product List</h2>
         <div class="row">
-            <form method="post" action="product" class="row align-items-center g-2">
+            <form method="get" action="product" class="row align-items-center g-2">
                 <input type="hidden" name="action" value="list" />
 
                 <div class="col-md-2">
-                    <input class="form-control" type="text" name="text" placeholder="Search by name" value="${text}" />
+                    <input class="form-control" type="text" name="text" placeholder="Search by name" value="${text}" id="text" />
                 </div>
                 <div class="col-md-2 multi-select-dropdown">
                     <button type="button" class="form-control">Select category:</button>
@@ -31,7 +31,7 @@
                     </div>
                 </div>
                 <div class="col-md-1">
-                    <select name="status" class="form-select" >
+                    <select name="status" class="form-select" id="status" >
                         <option value="">-- Status --</option>
                         <option value="1" ${status == 1 ? 'selected' : ''}>Active</option>
                         <option value="0" ${status == 0 ? 'selected' : ''}>Inactive</option>
@@ -96,7 +96,7 @@
                             <tr>
                                 <td>${startIndex + loop.index + 1}</td>
                                 <td>${pro.productName}</td>
-                                <td><img src="${pro.productAvatar}" alt="Product avatar" /></td>
+                                <td><img src="${pro.productAvatar}" alt="Product avatar" class="product-avatar" /></td>
                                 <td>${pro.productPrice}</td>
                                 <td>${pro.productQuantity}</td>
                                 <td><c:choose>
@@ -154,35 +154,37 @@
                         <ul class="pagination">
                             <c:if test="${pagination.page > 1}">
                                 <li class="page-item">
-                                    <a class="page-link" href="product?page=1&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">First</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="product?page=${pagination.page - 1}&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">Previous</a>
-                                </li>
+                                    <a class="page-link" href="list-product?page=1&size=${pagination.size}&text=${text}&status=${status}&minPrice=${minPrice}&maxPrice=${maxPrice}<c:forEach var="catId" items="${categoryIds}">&categoryIds=${catId}</c:forEach>">
+                                            First
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="list-product?page=${pagination.page - 1}&size=${pagination.size}&text=${text}&status=${status}&minPrice=${minPrice}&maxPrice=${maxPrice}<c:forEach var="catId" items="${categoryIds}">&categoryIds=${catId}</c:forEach>">
+                                            Previous
+                                        </a>
+                                    </li>
                             </c:if>
 
                             <c:forEach begin="1" end="${pagination.totalPages}" var="pageNumber">
-                                <c:choose>
-                                    <c:when test="${pageNumber == pagination.page}">
-                                        <li class="page-item active">
-                                            <span class="page-link">${pageNumber}</span>
-                                        </li>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <li class="page-item">
-                                            <a class="page-link" href="product?page=${pageNumber}&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">${pageNumber}</a>
-                                        </li>
-                                    </c:otherwise>
-                                </c:choose>
+                                <li class="page-item ${pageNumber == pagination.page ? 'active' : ''}">
+                                    <a class="page-link" href="list-product?page=${pageNumber}&size=${pagination.size}&text=${text}&status=${status}&minPrice=${minPrice}&maxPrice=${maxPrice}<c:forEach var="catId" items="${categoryIds}">&categoryIds=${catId}</c:forEach>">
+                                        ${pageNumber}
+                                    </a>
+                                </li>
                             </c:forEach>
 
                             <c:if test="${pagination.page < pagination.totalPages}">
                                 <li class="page-item">
-                                    <a class="page-link" href="product?page=${pagination.page + 1}&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">Next</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="product?page=${pagination.totalPages}&size=${pagination.size}&text=${text}&typeId=${typeId}&status=${status}">Last</a>
-                                </li>
+                                    <a class="page-link" href="list-product?page=${pagination.page + 1}&size=${pagination.size}&text=${text}&status=${status}&minPrice=${minPrice}&maxPrice=${maxPrice}<c:forEach var="catId" items="${categoryIds}">&categoryIds=${catId}</c:forEach>">
+                                            Next
+                                        </a>
+                                    </li>
+                                    <li class="page-item">
+                                        <a class="page-link" 
+                                           href="list-product?page=${pagination.totalPages}&size=${pagination.size}&text=${text}&status=${status}&minPrice=${minPrice}&maxPrice=${maxPrice}<c:forEach var="catId" items="${categoryIds}">&categoryIds=${catId}</c:forEach>">
+                                            Last
+                                        </a>
+                                    </li>
                             </c:if>
                         </ul>
                     </nav>
@@ -191,7 +193,7 @@
         </div><!--end col-->
         <div class="page-size d-md-flex align-items-center text-center justify-content-center">
             Show 
-            <select onchange="location.href = 'product?page=1&size=' + this.value + '&text=${text}&typeId=${typeId}&status=${status}'">
+            <select onchange="updatePageSize()" id="changePageSize">
                 <option value="1" ${pagination.size == 1 ? 'selected' : ''}>1</option>
                 <option value="3" ${pagination.size == 3 ? 'selected' : ''}>3</option>
                 <option value="5" ${pagination.size == 5 ? 'selected' : ''}>5</option>
@@ -261,6 +263,20 @@
             maxRange.addEventListener("input", syncValues);
             minInput.addEventListener("change", syncInputs);
             maxInput.addEventListener("change", syncInputs);
+
+            function updatePageSize() {
+                const params = new URLSearchParams(window.location.search);
+                const size = document.getElementById('changePageSize').value;
+                params.append('size', size);
+                params.append('page', 1);
+
+                document.querySelectorAll('select[name="categoryIds"] option:checked').forEach(option => {
+                    params.append('categoryIds', option.value);
+                });
+                console.log(params.toString());
+                location.href = 'product?' + params.toString();
+            }
+
         </script>
     </body>
     <div class="clearfix"> </div>

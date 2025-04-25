@@ -79,22 +79,37 @@
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="avatar">Avatar</label>
                         <div class="col-sm-10">
-                            <input type="file" id="image" class="form-control" name="avatar" accept="image/*" />
+                            <input type="file" id="avatar" class="form-control" name="avatar" accept="image/*" />
                             <c:if test="${not empty product.productAvatar}">
-                                <img src="${product.productAvatar}" alt="Avatar" />
+                                <img id="avatarPreview" src="${product.productAvatar}" 
+                                     class="avatar-preview" alt="Avatar Preview" />
                             </c:if>
                         </div>
                     </div>
 
+
                     <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="image">Image</label>
+                        <label class="col-sm-2 col-form-label" for="image">Images</label>
                         <div class="col-sm-10">
-                            <input type="file" id="image" class="form-control" name="image" multiple accept="image/*" />
-                            <c:if test="${not empty productImages}">
-                                <c:forEach var="img" items="${productImages}">
-                                    <img src="${img.productImage}" />
-                                </c:forEach>
-                            </c:if>
+                            <input type="file" id="images" class="form-control" name="images" multiple accept="image/*" />
+                            <div class="product-image-container" id="imagesPreview">
+                                <c:if test="${not empty productImages}">
+                                    <c:forEach var="img" items="${productImages}">
+                                        <img src="${img.productImage}" alt="Product Image" class="product-image-preview" id="imgPrev"/>
+                                    </c:forEach>
+                                </c:if>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+                        <label class="col-sm-2 col-form-label" for="imageAdditional">Additional Images</label>
+                        <div class="col-sm-10">
+                            <input type="file" id="imageAdditional" class="form-control" name="images" multiple accept="image/*"/>
+                            <div class="product-image-container" id="imageAdditionalPreview">
+
+                            </div>
+
                         </div>
                     </div>
 
@@ -154,6 +169,62 @@
             document.getElementById('productForm').reset();
 
         });
+
+        document.getElementById('avatar').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    const preview = document.getElementById('avatarPreview');
+                    preview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        const imagesInput = document.getElementById('images');
+        if (imagesInput) {
+            imagesInput.addEventListener('change', function (e) {
+                const files = Array.from(e.target.files);
+                const container = document.getElementById('imagesPreview');
+                if (container) {
+                    container.innerHTML = '';
+
+                    files.forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'product-image-preview';
+                            container.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            });
+        }
+
+        const additionalImagesInput = document.getElementById('imageAdditional');
+        if (additionalImagesInput) {
+            additionalImagesInput.addEventListener('change', function (e) {
+                const files = Array.from(e.target.files);
+                const container = document.getElementById('imageAdditionalPreview');
+                if (container) {
+                    container.innerHTML = '';
+
+                    files.forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'product-image-preview';
+                            container.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            });
+        }
     </script>
 
     <div class="clearfix"> </div>
