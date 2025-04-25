@@ -1,18 +1,9 @@
-document.querySelectorAll('[data-bs-toggle="modal"]').forEach(trigger => {
-    trigger.addEventListener('click', function () {
-        const categoryId = this.getAttribute('data-whatever');
-        document.getElementById('categoryIdDelete').setAttribute("value", categoryId);
-        document.getElementById('buttonDelete').setAttribute("href", "delete-category?id=" + categoryId);
-    });
-});
-
-
 document.addEventListener('DOMContentLoaded', function () {
     function autoCloseMessage(messageType) {
         const message = document.getElementById('message');
         if (message) {
             setTimeout(() => {
-                message.classList.add('fade-out');
+                message.classList.add('hidden');
                 setTimeout(() => message.remove(), 500);
             }, 5000);
         }
@@ -22,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.alert .btn-close').forEach(button => {
             button.addEventListener('click', function () {
                 const alert = this.closest('.alert');
-                alert.classList.add('fade-out');
+                alert.classList.add('hidden');
                 setTimeout(() => alert.remove(), 500);
             });
         });

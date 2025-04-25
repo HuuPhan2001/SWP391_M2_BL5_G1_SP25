@@ -20,7 +20,7 @@ public class ProductDto {
     private String productName;
     private String productAvatar;
     private String productDesc;
-    private Integer productPrice;
+    private BigDecimal productPrice;
     private Integer productQuantity;
     private int status;
     private Timestamp createAt;
@@ -35,7 +35,7 @@ public class ProductDto {
     public ProductDto() {
     }
 
-    public ProductDto(int productId, String productName, String productAvatar, String productDesc, Integer productPrice, Integer productQuantity, int status, Timestamp createAt, Timestamp updateAt, BigDecimal weight, BigDecimal length, BigDecimal width, BigDecimal height, List<ProductCategoryDto> categoryList, List<ProductImage> images) {
+    public ProductDto(int productId, String productName, String productAvatar, String productDesc, BigDecimal productPrice, Integer productQuantity, int status, Timestamp createAt, Timestamp updateAt, BigDecimal weight, BigDecimal length, BigDecimal width, BigDecimal height, List<ProductCategoryDto> categoryList, List<ProductImage> images) {
         this.productId = productId;
         this.productName = productName;
         this.productAvatar = productAvatar;
@@ -85,11 +85,11 @@ public class ProductDto {
         this.productDesc = productDesc;
     }
 
-    public Integer getProductPrice() {
+    public BigDecimal getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(Integer productPrice) {
+    public void setProductPrice(BigDecimal productPrice) {
         this.productPrice = productPrice;
     }
 

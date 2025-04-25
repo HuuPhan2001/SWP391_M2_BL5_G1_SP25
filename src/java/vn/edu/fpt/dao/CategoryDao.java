@@ -262,16 +262,17 @@ public class CategoryDao extends DbContext {
         return list;
     }
     
-    public Category getCategoryByType(int type) {
-        Category c = new Category();
+    public List<Category> getCategoryByType(int type) {
+        List<Category> list = new ArrayList<>();
 
-        String query = "SELECT * FROM category WHERE category_type_id = ?";
+        String query = "SELECT * FROM category WHERE category_type_id = ? AND status <> 2";
 
         try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
 
             ps.setInt(1, type);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                Category c = new Category();
                 c.setCategoryId(rs.getInt("category_id"));
                 c.setCategoryTypeId(rs.getInt("category_type_id"));
                 c.setCategoryName(rs.getString("category_name"));
@@ -281,13 +282,14 @@ public class CategoryDao extends DbContext {
                 c.setStatus(rs.getInt("status"));
                 c.setCreateAt(rs.getTimestamp("create_at"));
                 c.setUpdateAt(rs.getTimestamp("update_at"));
+                list.add(c);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return c;
+        return list;
     }
-
+    
 }

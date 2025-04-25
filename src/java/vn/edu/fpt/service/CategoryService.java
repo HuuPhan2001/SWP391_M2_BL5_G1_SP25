@@ -124,10 +124,7 @@ public class CategoryService {
             String typeIdRaw = request.getParameter("typeId");
             String statusRaw = request.getParameter("status");
 
-            if (name == null || name.trim().isEmpty() || name.trim().length() >= 255 || name.startsWith(" ")) {
-                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
-                return;
-            }
+            int status = (statusRaw != null) ? 1 : 0;
 
             int typeId = 0;
             try {
@@ -137,18 +134,6 @@ public class CategoryService {
                 return;
             }
 
-            if (description != null && (description.trim().length() >= 255 || description.startsWith(" "))) {
-                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
-                return;
-            }
-
-            if (banner != null && (banner.trim().length() >= 255 || banner.startsWith(" "))) {
-                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
-                return;
-            }
-
-            int status = (statusRaw != null) ? 1 : 0;
-
             Category newCategory = new Category();
             newCategory.setCategoryName(name.trim());
             newCategory.setCategoryDesc((description != null) ? description.trim() : "");
@@ -157,6 +142,27 @@ public class CategoryService {
             newCategory.setStatus(status);
             System.out.println(newCategory.toString());
 
+            if (name.trim().isEmpty() || name.trim().length() >= 255 || name.startsWith(" ")) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", newCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+
+            if (description != null && (description.trim().length() >= 255 || description.startsWith(" "))) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", newCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+
+            if (banner != null && (banner.trim().length() >= 255 || banner.startsWith(" "))) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", newCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+
             List<Category> flag = categoryDao.checkNameExist(newCategory.getCategoryName());
             if (flag != null && !flag.isEmpty()) {
                 Gson gson = new Gson();
@@ -164,10 +170,8 @@ public class CategoryService {
 
                 request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.NAME_EXIST);
 
-                request.setAttribute("category", newCategory);
-
-                request.getRequestDispatcher("./category/FormCategory.jsp").forward(request, response);
-
+                request.getSession().setAttribute("formData", newCategory);
+                response.sendRedirect("new-category");
             } else {
                 categoryDao.createCategory(newCategory);
                 request.getSession().setAttribute("successMessage", Constant.ADD_SUCCESS);
@@ -190,12 +194,6 @@ public class CategoryService {
             String typeIdRaw = request.getParameter("typeId");
             String statusRaw = request.getParameter("status");
 
-            // Validate Name
-            if (name == null || name.trim().isEmpty()) {
-                request.getSession().setAttribute("errorMessage", Constant.UPDATE_FAILED + ": " + Constant.REQUIRED_FIELD);
-                return;
-            }
-
             int typeId = 0;
             try {
                 typeId = Integer.parseInt(typeIdRaw);
@@ -212,8 +210,31 @@ public class CategoryService {
             existingCategory.setCategoryTypeId(typeId);
             existingCategory.setStatus(status);
             existingCategory.setUpdateAt(new Timestamp(System.currentTimeMillis()));
+            
+            if (name.trim().isEmpty() || name.trim().length() >= 255 || name.startsWith(" ")) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", existingCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+
+            if (description != null && (description.trim().length() >= 255 || description.startsWith(" "))) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", existingCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+
+            if (banner != null && (banner.trim().length() >= 255 || banner.startsWith(" "))) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", existingCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+            
             List<Category> flag = categoryDao.checkNameExist(existingCategory.getCategoryName());
-            if (flag != null && !flag.isEmpty() && flag.get(0).getCategoryId() != categoryId) {
+            boolean isDuplicate = flag.stream().anyMatch(ct -> ct.getCategoryId() != categoryId);
+            if (isDuplicate) {
                 Gson gson = new Gson();
                 request.getSession().setAttribute("failedCategory", gson.toJson(existingCategory));
 
@@ -222,8 +243,8 @@ public class CategoryService {
                 List<CategoryType> categoryTypes = categoryTypeDao.getAllCategoryTypes();
                 request.setAttribute("categoryTypes", categoryTypes);
 
-                request.setAttribute("category", existingCategory);
-                request.getRequestDispatcher("./category/category-form.jsp").forward(request, response);
+                request.getSession().setAttribute("formData", existingCategory);
+                response.sendRedirect("edit-category?id=" + categoryId);
             } else {
                 categoryDao.updateCategory(existingCategory);
 
@@ -231,7 +252,7 @@ public class CategoryService {
 
                 response.sendRedirect("category");
             }
-        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
+        } catch (IOException | NumberFormatException | SQLException e) {
             request.getSession().setAttribute("errorMessage", "An error occurred: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/category");
         }

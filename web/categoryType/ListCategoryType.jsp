@@ -10,15 +10,15 @@
     </head>
     <body>
         </br></br></br>
-        <h2 class="text-center mb-4">Category List</h2>
+        <h2 class="text-center mb-4">Category Type List</h2>
         <div class="row">
-            <form method="get" action="category-type">
+            <form method="get" action="category-type" class="row align-items-center g-2">
                 <input type="hidden" name="action" value="list" />
 
                 <div class="col-md-5">
                     <input class="form-control" type="text" name="text" placeholder="Search by name" value="${text}" />
                 </div>
-                
+
                 <div class="col-md-3">
                     <select name="status" class="form-select" >
                         <option value="">-- Status --</option>
@@ -37,14 +37,13 @@
         </div>
         <div id="message" class="message-container">
             <c:if test="${not empty successMessage}">
-                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <div class="alert alert-success alert-dismissible show" role="alert">
                     <i class="bi bi-check-circle-fill me-2"></i>
                     ${successMessage}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
                 <% 
     session.removeAttribute("successMessage"); 
-    session.removeAttribute("showSuccessMessage");
                 %>
             </c:if>
         </div>
@@ -86,15 +85,10 @@
                                         <a class="dropdown-item" href="edit-category-type?id=${type.categoryTypeId}"
                                            ><i class="bx bx-edit-alt me-1"></i> Edit</a
                                         >
-                                        <!--                                        <button class="dropdown-item" type="button" data-bs-toggle="modal" 
-                                                                                        data-bs-target="#confirmModal"
-                                                                                        onclick="setDeleteId(${type.categoryTypeId})">
-                                                                                    <i class="bx bx-trash me-1"></i> Delete</button>-->
-                                        <form id="deleteForm" action="delete-category-type" method="post">
-                                            <input type="hidden" name="id" id="categoryTypeIdDelete" value="${type.categoryTypeId}" />
-                                            <button type="submit" class="dropdown-item"><i class="bx bx-trash me-1"></i>Delete</button>
-                                        </form>
-
+                                        <button class="dropdown-item" type="button" data-bs-toggle="modal"
+                                                data-bs-target="#confirmModal" data-whatever="${type.categoryTypeId}"
+                                                ">
+                                            <i class="bx bx-trash me-1"></i> Delete</button>
                                     </div>
                                 </div>
                             </td>
@@ -167,7 +161,7 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+        <div class="modal" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -178,7 +172,7 @@
                         Are you sure you want to delete this?
                     </div>
                     <div class="modal-footer">
-                        <form id="deleteForm" action="delete-categoryType" method="post">
+                        <form id="deleteForm" action="delete-category-type" method="post">
                             <input type="hidden" name="id" id="categoryTypeIdDelete" />
                             <button type="submit" class="btn btn-danger">Yes</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -188,9 +182,13 @@
             </div>
         </div>
         <script>
-            function setDeleteId(id) {
-                document.getElementById("categoryTypeIdDelete").value = id;
-            }
+            document.querySelectorAll('[data-bs-toggle="modal"]').forEach(trigger => {
+                trigger.addEventListener('click', function () {
+                    const categoryId = this.getAttribute('data-whatever');
+                    document.getElementById('categoryTypeIdDelete').setAttribute("value", categoryId);
+                    document.getElementById('buttonDelete').setAttribute("href", "delete-category-type?id=" + categoryId);
+                });
+            });
         </script>
     </body>
     <div class="clearfix"> </div>

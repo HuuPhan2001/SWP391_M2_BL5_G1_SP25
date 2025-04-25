@@ -60,7 +60,7 @@
         <div class="container">
             <div class="content-top">
                 <h1>NEW RELEASED</h1>
-                <div class="grid-in">
+                <div class="grid-in row">
                     <div class="col-md-4 grid-top">
                         <a href="#" class="b-link-stripe b-animate-go  thickbox"><img class="img-responsive" src="assets/images/pi.jpg" alt="">
                             <div class="b-wrapper">
@@ -95,7 +95,7 @@
                     </div>
                     <div class="clearfix"> </div>
                 </div>
-                <div class="grid-in">
+                <div class="grid-in row">
                     <div class="col-md-4 grid-top">
                         <a href="#" class="b-link-stripe b-animate-go  thickbox"><img class="img-responsive" src="assets/images/pi3.jpg" alt="">
                             <div class="b-wrapper">
@@ -131,12 +131,12 @@
             </div>
             <!----->
 
-            <div class="content-top-bottom">
+            <div class="content-top-bottom row">
                 <h2>Featured Collections</h2>
                 <div class="col-md-6 men">
-                    <a href="#" class="b-link-stripe b-animate-go  thickbox"><img class="img-responsive" src="assets/images/t1.jpg" alt="">
+                    <a href="#" class="b-link-stripe b-animate-go  thickbox"><img class="img-responsive" src="assets/images/t1.jpg" alt="" style="width: 100%">
                         <div class="b-wrapper">
-                            <h3 class="b-animate b-from-top top-in   b-delay03 ">
+                            <h3 class="b-animate b-from-top top-in   b-delay03 " style="height: 100%">
                                 <span>Lorem</span>	
                             </h3>
                         </div>
@@ -146,20 +146,20 @@
                 </div>
                 <div class="col-md-6">
                     <div class="col-md1 ">
-                        <a href="#" class="b-link-stripe b-animate-go  thickbox"><img class="img-responsive" src="assets/images/t2.jpg" alt="">
+                        <a href="#" class="b-link-stripe b-animate-go thickbox"><img class="img-responsive" src="assets/images/t2.jpg" alt="" style="width: 100%">
                             <div class="b-wrapper">
-                                <h3 class="b-animate b-from-top top-in1   b-delay03 ">
+                                <h3 class="b-animate b-from-top top-in1   b-delay03 " style="height: 100%">
                                     <span>Lorem</span>	
                                 </h3>
                             </div>
                         </a>
 
                     </div>
-                    <div class="col-md2">
+                    <div class="col-md2 row">
                         <div class="col-md-6 men1">
-                            <a href="#" class="b-link-stripe b-animate-go  thickbox"><img class="img-responsive" src="assets/images/t3.jpg" alt="">
+                            <a href="#" class="b-link-stripe b-animate-go  thickbox"><img class="img-responsive" src="assets/images/t3.jpg" alt="" style="width: 100%">
                                 <div class="b-wrapper">
-                                    <h3 class="b-animate b-from-top top-in2   b-delay03 ">
+                                    <h3 class="b-animate b-from-top top-in2   b-delay03 " style="height: 100%">
                                         <span>Lorem</span>	
                                     </h3>
                                 </div>
@@ -167,9 +167,9 @@
 
                         </div>
                         <div class="col-md-6 men2">
-                            <a href="#" class="b-link-stripe b-animate-go  thickbox"><img class="img-responsive" src="assets/images/t4.jpg" alt="">
+                            <a href="#" class="b-link-stripe b-animate-go  thickbox"><img class="img-responsive" src="assets/images/t4.jpg" alt="" style="width: 100%">
                                 <div class="b-wrapper">
-                                    <h3 class="b-animate b-from-top top-in2   b-delay03 ">
+                                    <h3 class="b-animate b-from-top top-in2   b-delay03 " style="height: 100%">
                                         <span>Lorem</span>	
                                     </h3>
                                 </div>
