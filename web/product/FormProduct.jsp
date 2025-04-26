@@ -102,17 +102,18 @@
                         </div>
                     </div>
 
-                    <div class="row mb-3">
-                        <label class="col-sm-2 col-form-label" for="imageAdditional">Additional Images</label>
-                        <div class="col-sm-10">
-                            <input type="file" id="imageAdditional" class="form-control" name="images" multiple accept="image/*"/>
-                            <div class="product-image-container" id="imageAdditionalPreview">
+                    <c:if test="${product != null}" >
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="imageAdditional">Additional Images</label>
+                            <div class="col-sm-10">
+                                <input type="file" id="imageAdditional" class="form-control" name="images" multiple accept="image/*"/>
+                                <div class="product-image-container" id="imageAdditionalPreview">
+
+                                </div>
 
                             </div>
-
                         </div>
-                    </div>
-
+                    </c:if>
                     <div class="row mb-3">
                         <label class="col-sm-2 col-form-label" for="typeId">Category</label>
                         <div class="col-sm-10">
