@@ -25,9 +25,9 @@
             <link href="assets/css/memenu.css" rel="stylesheet" type="text/css" media="all" />
             <link rel="stylesheet" href="assets/css/boxicons.css" />
             <script type="text/javascript" src="assets/js/memenu.js"></script>
-<!--                        <script>$(document).ready(function () {
-                                $(".memenu").memenu();
-                            });</script>-->
+            <!--                        <script>$(document).ready(function () {
+                                            $(".memenu").memenu();
+                                        });</script>-->
             <script src="assets/js/simpleCart.min.js"></script>
             <script src="assets/js/helpers.js"></script>
 
@@ -38,16 +38,16 @@
             <script src="assets/js/handler.js"></script>
             <script src="assets/js/bootstrap.bundle.min.js"></script>
             <script src="assets/js/responsiveslides.min.js"></script>
-    </head>
-    <body>
-        <div class="header">
-            <div class="header-top">
-                <div class="container">
-                    <div class="search">
-                        <form>
-                            <input type="text" value="Search " onfocus="this.value = '';" onblur="if (this.value == '') {
-                                            this.value = 'Search';
-                                        }">
+        </head>
+        <body>
+            <div class="header">
+                <div class="header-top">
+                    <div class="container">
+                        <div class="search">
+                            <form>
+                                <input type="text" value="Search " onfocus="this.value = '';" onblur="if (this.value == '') {
+                                        this.value = 'Search';
+                                    }">
                                 <input type="submit" value="Go">
                             </form>
                         </div>
@@ -55,16 +55,16 @@
                             <ul>
                                 <c:if test="${not empty sessionScope.acc}">
                                     <li>
-                                    <a style="font-size: 25px" href="userInfo?accId=${sessionScope.acc.userName}">
-                                        Hello ${sessionScope.acc.userName}
-                                    </a>
+                                        <a style="font-size: 25px" href="userInfo?accId=${sessionScope.acc.userName}">
+                                            Hello ${sessionScope.acc.userName}
+                                        </a>
                                     </li>
                                     <li><a style="font-size: 25px" href="logout">Logout</a></li>
-                                </c:if>
-                                    
+                                    </c:if>
+
                                 <c:if test="${empty sessionScope.acc}">
                                     <li><a style="font-size: 25px" href="Login.jsp">Login</a></li>
-                                </c:if>
+                                    </c:if>
                             </ul>
                             <div class="cart box_1">
                                 <a href="checkout.html">
@@ -74,144 +74,147 @@
                                 </a>
                                 <p><a href="javascript:;" class="simpleCart_empty">Empty Cart</a></p>
 
+                            </div>
+                            <div class="clearfix"> </div>
                         </div>
                         <div class="clearfix"> </div>
                     </div>
-                    <div class="clearfix"> </div>
                 </div>
-            </div>
-            <div class="container">
-                <div class="head-top">
-                    <div class="logo">
-                        <a href="home"><img src="assets/images/logo.png" alt=""></a>	
-                    </div>
-                    <div class=" h_menu4">
-                        <ul class="memenu skyblue">
-                            <li class="active grid"><a class="color8" href="home">Home</a></li>	
-                            <li><a class="color1" href="#">Men</a>
-                                <div class="mepanel">
-                                    <div class="row">
-                                        <div class="col1">
-                                            <div class="h_nav">
-                                                <ul>
-                                                    <li><a href="#">Accessories</a></li>
-                                                    <li><a href="#">Bags</a></li>
-                                                    <li><a href="#">Caps & Hats</a></li>
-                                                    <li><a href="#">Hoodies & Sweatshirts</a></li>
-                                                    <li><a href="#">Jackets & Coats</a></li>
-                                                    <li><a href="#">Jeans</a></li>
-                                                    <li><a href="#">Jewellery</a></li>
-                                                    <li><a href="#">Jumpers & Cardigans</a></li>
-                                                    <li><a href="#">Leather Jackets</a></li>
-                                                    <li><a href="#">Long Sleeve T-Shirts</a></li>
-                                                    <li><a href="#">Loungewear</a></li>
-                                                </ul>	
-                                            </div>							
-                                        </div>
-                                        <div class="col1">
-                                            <div class="h_nav">
-                                                <ul>
-                                                    <li><a href="#">Shirts</a></li>
-                                                    <li><a href="#">Shoes, Boots & Trainers</a></li>
-                                                    <li><a href="#">Shorts</a></li>
-                                                    <li><a href="#">Suits & Blazers</a></li>
-                                                    <li><a href="#">Sunglasses</a></li>
-                                                    <li><a href="#">Sweatpants</a></li>
-                                                    <li><a href="#">Swimwear</a></li>
-                                                    <li><a href="#">Trousers & Chinos</a></li>
-                                                    <li><a href="#">T-Shirts</a></li>
-                                                    <li><a href="#">Underwear & Socks</a></li>
-                                                    <li><a href="#">Vests</a></li>
-                                                </ul>	
-                                            </div>							
-                                        </div>
-                                        <div class="col1">
-                                            <div class="h_nav">
-                                                <h4>Popular Brands</h4>
-                                                <ul>
-                                                    <li><a href="#">Levis</a></li>
-                                                    <li><a href="#">Persol</a></li>
-                                                    <li><a href="#">Nike</a></li>
-                                                    <li><a href="#">Edwin</a></li>
-                                                    <li><a href="#">New Balance</a></li>
-                                                    <li><a href="#">Jack & Jones</a></li>
-                                                    <li><a href="#">Paul Smith</a></li>
-                                                    <li><a href="#">Ray-Ban</a></li>
-                                                    <li><a href="#">Wood Wood</a></li>
-                                                </ul>	
-                                            </div>												
+                <div class="container">
+                    <div class="head-top">
+                        <div class="logo">
+                            <a href="home"><img src="assets/images/logo.png" alt=""></a>	
+                        </div>
+                        <div class=" h_menu4">
+                            <ul class="memenu skyblue">
+                                <li class="active grid"><a class="color8" href="home">Home</a></li>	
+                                    <c:if test="${not empty sessionScope.acc}">
+                                    <li><a class="color1" href="<%=request.getContextPath()%>/category">Category</a></li>
+                                    <li><a class="color1" href="<%=request.getContextPath()%>/category-type">Category Type</a></li>
+                                    <li><a class="color1" href="<%=request.getContextPath()%>/product">Product</a></li>
+                                    <li><a class="color1" href="<%=request.getContextPath()%>/all-product">All Product</a></li>
+                                    </c:if>
+                                <li><a class="color1" href="#">Men</a>
+                                    <div class="mepanel">
+                                        <div class="row">
+                                            <div class="col1">
+                                                <div class="h_nav">
+                                                    <ul>
+                                                        <li><a href="#">Accessories</a></li>
+                                                        <li><a href="#">Bags</a></li>
+                                                        <li><a href="#">Caps & Hats</a></li>
+                                                        <li><a href="#">Hoodies & Sweatshirts</a></li>
+                                                        <li><a href="#">Jackets & Coats</a></li>
+                                                        <li><a href="#">Jeans</a></li>
+                                                        <li><a href="#">Jewellery</a></li>
+                                                        <li><a href="#">Jumpers & Cardigans</a></li>
+                                                        <li><a href="#">Leather Jackets</a></li>
+                                                        <li><a href="#">Long Sleeve T-Shirts</a></li>
+                                                        <li><a href="#">Loungewear</a></li>
+                                                    </ul>	
+                                                </div>							
+                                            </div>
+                                            <div class="col1">
+                                                <div class="h_nav">
+                                                    <ul>
+                                                        <li><a href="#">Shirts</a></li>
+                                                        <li><a href="#">Shoes, Boots & Trainers</a></li>
+                                                        <li><a href="#">Shorts</a></li>
+                                                        <li><a href="#">Suits & Blazers</a></li>
+                                                        <li><a href="#">Sunglasses</a></li>
+                                                        <li><a href="#">Sweatpants</a></li>
+                                                        <li><a href="#">Swimwear</a></li>
+                                                        <li><a href="#">Trousers & Chinos</a></li>
+                                                        <li><a href="#">T-Shirts</a></li>
+                                                        <li><a href="#">Underwear & Socks</a></li>
+                                                        <li><a href="#">Vests</a></li>
+                                                    </ul>	
+                                                </div>							
+                                            </div>
+                                            <div class="col1">
+                                                <div class="h_nav">
+                                                    <h4>Popular Brands</h4>
+                                                    <ul>
+                                                        <li><a href="#">Levis</a></li>
+                                                        <li><a href="#">Persol</a></li>
+                                                        <li><a href="#">Nike</a></li>
+                                                        <li><a href="#">Edwin</a></li>
+                                                        <li><a href="#">New Balance</a></li>
+                                                        <li><a href="#">Jack & Jones</a></li>
+                                                        <li><a href="#">Paul Smith</a></li>
+                                                        <li><a href="#">Ray-Ban</a></li>
+                                                        <li><a href="#">Wood Wood</a></li>
+                                                    </ul>	
+                                                </div>												
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li class="grid"><a class="color2" href="#">	Women</a>
-                                <div class="mepanel">
-                                    <div class="row">
-                                        <div class="col1">
-                                            <div class="h_nav">
-                                                <ul>
-                                                    <li><a href="#">Accessories</a></li>
-                                                    <li><a href="#">Bags</a></li>
-                                                    <li><a href="#">Caps & Hats</a></li>
-                                                    <li><a href="#">Hoodies & Sweatshirts</a></li>
-                                                    <li><a href="#">Jackets & Coats</a></li>
-                                                    <li><a href="#">Jeans</a></li>
-                                                    <li><a href="#">Jewellery</a></li>
-                                                    <li><a href="#">Jumpers & Cardigans</a></li>
-                                                    <li><a href="#">Leather Jackets</a></li>
-                                                    <li><a href="#">Long Sleeve T-Shirts</a></li>
-                                                    <li><a href="#">Loungewear</a></li>
-                                                </ul>	
-                                            </div>							
-                                        </div>
-                                        <div class="col1">
-                                            <div class="h_nav">
-                                                <ul>
-                                                    <li><a href="#">Shirts</a></li>
-                                                    <li><a href="#">Shoes, Boots & Trainers</a></li>
-                                                    <li><a href="#">Shorts</a></li>
-                                                    <li><a href="#">Suits & Blazers</a></li>
-                                                    <li><a href="#">Sunglasses</a></li>
-                                                    <li><a href="#">Sweatpants</a></li>
-                                                    <li><a href="#">Swimwear</a></li>
-                                                    <li><a href="#">Trousers & Chinos</a></li>
-                                                    <li><a href="#">T-Shirts</a></li>
-                                                    <li><a href="#">Underwear & Socks</a></li>
-                                                    <li><a href="#">Vests</a></li>
-                                                </ul>	
-                                            </div>							
-                                        </div>
-                                        <div class="col1">
-                                            <div class="h_nav">
-                                                <h4>Popular Brands</h4>
-                                                <ul>
-                                                    <li><a href="#">Levis</a></li>
-                                                    <li><a href="#">Persol</a></li>
-                                                    <li><a href="#">Nike</a></li>
-                                                    <li><a href="#">Edwin</a></li>
-                                                    <li><a href="#">New Balance</a></li>
-                                                    <li><a href="#">Jack & Jones</a></li>
-                                                    <li><a href="#">Paul Smith</a></li>
-                                                    <li><a href="#">Ray-Ban</a></li>
-                                                    <li><a href="#">Wood Wood</a></li>
-                                                </ul>	
-                                            </div>												
+                                </li>
+                                <li class="grid"><a class="color2" href="#">	Women</a>
+                                    <div class="mepanel">
+                                        <div class="row">
+                                            <div class="col1">
+                                                <div class="h_nav">
+                                                    <ul>
+                                                        <li><a href="#">Accessories</a></li>
+                                                        <li><a href="#">Bags</a></li>
+                                                        <li><a href="#">Caps & Hats</a></li>
+                                                        <li><a href="#">Hoodies & Sweatshirts</a></li>
+                                                        <li><a href="#">Jackets & Coats</a></li>
+                                                        <li><a href="#">Jeans</a></li>
+                                                        <li><a href="#">Jewellery</a></li>
+                                                        <li><a href="#">Jumpers & Cardigans</a></li>
+                                                        <li><a href="#">Leather Jackets</a></li>
+                                                        <li><a href="#">Long Sleeve T-Shirts</a></li>
+                                                        <li><a href="#">Loungewear</a></li>
+                                                    </ul>	
+                                                </div>							
+                                            </div>
+                                            <div class="col1">
+                                                <div class="h_nav">
+                                                    <ul>
+                                                        <li><a href="#">Shirts</a></li>
+                                                        <li><a href="#">Shoes, Boots & Trainers</a></li>
+                                                        <li><a href="#">Shorts</a></li>
+                                                        <li><a href="#">Suits & Blazers</a></li>
+                                                        <li><a href="#">Sunglasses</a></li>
+                                                        <li><a href="#">Sweatpants</a></li>
+                                                        <li><a href="#">Swimwear</a></li>
+                                                        <li><a href="#">Trousers & Chinos</a></li>
+                                                        <li><a href="#">T-Shirts</a></li>
+                                                        <li><a href="#">Underwear & Socks</a></li>
+                                                        <li><a href="#">Vests</a></li>
+                                                    </ul>	
+                                                </div>							
+                                            </div>
+                                            <div class="col1">
+                                                <div class="h_nav">
+                                                    <h4>Popular Brands</h4>
+                                                    <ul>
+                                                        <li><a href="#">Levis</a></li>
+                                                        <li><a href="#">Persol</a></li>
+                                                        <li><a href="#">Nike</a></li>
+                                                        <li><a href="#">Edwin</a></li>
+                                                        <li><a href="#">New Balance</a></li>
+                                                        <li><a href="#">Jack & Jones</a></li>
+                                                        <li><a href="#">Paul Smith</a></li>
+                                                        <li><a href="#">Ray-Ban</a></li>
+                                                        <li><a href="#">Wood Wood</a></li>
+                                                    </ul>	
+                                                </div>												
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                            <li><a class="color4" href="#">Blog</a></li>				
-                            <li><a class="color6" href="#">Conact</a></li>
-                            <li><a class="color1" href="<%=request.getContextPath()%>/category">Category</a></li>
-                            <li><a class="color1" href="<%=request.getContextPath()%>/category-type">CategoryType</a></li>
-                            <li><a class="color1" href="<%=request.getContextPath()%>/product">Product</a></li>
-                        </ul> 
+                                </li>
+                                <li><a class="color4" href="#">Blog</a></li>				
+                                <li><a class="color6" href="#">Conact</a></li>
+                            </ul> 
+                        </div>
+
+                        <div class="clearfix"> </div>
                     </div>
-
-                    <div class="clearfix"> </div>
                 </div>
-            </div>
 
-        </div>
-    </body>
-</html>
+            </div>
+        </body>
+    </html>

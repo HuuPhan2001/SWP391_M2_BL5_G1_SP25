@@ -825,9 +825,7 @@ h3.cate {
     font-size: 2em;
     font-family: 'Lato', sans-serif;
 }
-.of-left{
-    border-bottom: 1px solid #000;
-}
+
 .product-go {
     margin-top: 2em;
 }
@@ -945,9 +943,6 @@ h3.tag {
     width: 32%;
     font-size: 2em;
     font-family: 'Lato', sans-serif;
-}
-.of-left-in{
-    border-bottom: 1px solid #000;
 }
 
 /*----*/
@@ -16917,9 +16912,6 @@ body {
     color: rgba(67, 89, 113, 0.2);
 }
 
-.menu {
-    display: flex;
-}
 .menu .app-brand {
     width: 100%;
 }
@@ -18696,3 +18688,47 @@ html:not(.layout-footer-fixed) .content-wrapper {
     border: 1px solid #ddd;
     margin-top: 10px;
 }
+
+.menu > li > a {
+    width: 100%;
+    margin: 0.3em 0;
+    display:inline-block;
+    position: relative;
+    color: #000;
+    font-size: 1.1em;
+    text-decoration:none;
+
+}
+.menu > li > a:hover{
+    color:#EF5F21;
+}
+.menu ul li a {
+    width: 100%;
+    display: inline-block;
+    position: relative;
+    font-size:1.1em;
+    margin:0.3em 0;
+    color: #000;
+    text-decoration:none;
+
+    text-indent: 1.2em;
+}
+.menu ul li a:hover{
+    color:#EF5F21;
+}
+ul.kid-menu li,.menu ul li{
+    list-style: none;
+}
+.img-responsive{
+    width: 100%;
+}
+
+.menu li.active > a {
+    color: #ff5722;
+    font-weight: bold;
+}
+.menu li .count {
+    color: #999;
+    font-size: 0.9em;
+}
+

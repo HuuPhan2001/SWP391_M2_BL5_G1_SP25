@@ -410,4 +410,105 @@ public class ProductService {
         }
         response.sendRedirect("product");
     }
+    
+    public void listAllProductPagingCustomer(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+        String text = request.getParameter("text");
+        String statusParam = request.getParameter("status");
+        String minPriceParam = request.getParameter("minPrice");
+        String maxPriceParam = request.getParameter("maxPrice");
+        String[] categoryIdsParam = request.getParameterValues("categoryIds");
+        String sortBy = request.getParameter("sortBy");
+        String sortDirection = request.getParameter("sortDirection");
+        String pageParam = request.getParameter("page");
+        String sizeParam = request.getParameter("size");
+
+        Pagination pagination = new Pagination();
+        if (sortBy != null) {
+            pagination.setSortBy(sortBy);
+        }
+        if (sortDirection != null) {
+            pagination.setSortDirection(sortDirection);
+        }
+        if (pageParam != null) {
+            pagination.setPage(Integer.parseInt(pageParam));
+        }
+        if (sizeParam != null) {
+            pagination.setSize(Integer.parseInt(sizeParam));
+        }
+
+        Integer status = statusParam != null && !statusParam.isBlank() ? Integer.parseInt(statusParam) : null;
+        Integer minPrice = minPriceParam != null && !minPriceParam.isBlank() ? Integer.parseInt(minPriceParam) : null;
+        Integer maxPrice = maxPriceParam != null && !maxPriceParam.isBlank() ? Integer.parseInt(maxPriceParam) : null;
+
+        List<Integer> categoryIds = new ArrayList<>();
+        if (categoryIdsParam != null) {
+            for (String idStr : categoryIdsParam) {
+                try {
+                    categoryIds.add(Integer.parseInt(idStr));
+                } catch (NumberFormatException ignored) {
+                    throw new RuntimeException(Constant.DATA_INVALID);
+                }
+            }
+        }
+
+        try {
+            Set<String> validColumns = new HashSet<>(Arrays.asList(
+                    "product_id", "product_name", "status", "create_at"
+            ));
+            pagination.setSortBy(Common.getValidSortColumn(request.getParameter("sortBy"), validColumns, "product_id"));
+            pagination.setSortDirection(request.getParameter("sortDirection"));
+
+            PaginatedResult<ProductDto> result = productDao.listAllProductPaging(pagination, status, text, minPrice, maxPrice, categoryIds);
+
+            request.setAttribute("products", result.getContent());
+            request.setAttribute("pagination", result.getPagination());
+            request.setAttribute("text", text);
+            request.setAttribute("status", status);
+            request.setAttribute("minPrice", minPrice);
+            request.setAttribute("maxPrice", maxPrice);
+            request.setAttribute("categoryIds", categoryIds);
+
+            List<CategoryType> categoryTypes = categoryTypeDao.checkNameExist("Product");
+            List<Category> categories = categoryDao.getCategoryByType(categoryTypes.get(0).getCategoryTypeId());
+
+            request.setAttribute("categories", categories);
+
+            request.getRequestDispatcher("ListProduct.jsp").forward(request, response);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            response.sendError(500, "Error loading product list");
+        }
+    }
+    
+    public void productDetail(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, ServletException, IOException {
+
+        String idParam = request.getParameter("id");
+        if (idParam == null || idParam.trim().isEmpty()) {
+            request.getSession().setAttribute("errorMessage", Constant.DATA_INVALID);
+            response.sendRedirect("all-product");
+            return;
+        }
+
+        int productId = Integer.parseInt(idParam);
+        Product product = productDao.getProductById(productId);
+        if (product == null) {
+            request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+            response.sendRedirect("all-product");
+        }
+
+        List<ProductCategoryDto> listCate = productDao.getCategoryListByProductId(productId);
+        List<Integer> listCateId = listCate.stream().map(it -> it.getCategoryId()).collect(Collectors.toList());
+
+        List<ProductImage> listImg = productDao.getImageListByProductId(productId);
+
+        List<CategoryType> categoryTypes = categoryTypeDao.checkNameExist("Product");
+        List<Category> categories = categoryDao.getCategoryByType(categoryTypes.get(0).getCategoryTypeId());
+        request.setAttribute("categories", categories);
+        request.setAttribute("product", product);
+        request.setAttribute("selectedCategoryIds", listCateId);
+        request.setAttribute("productImages", listImg);
+        request.getRequestDispatcher("ProductDetail.jsp").forward(request, response);
+    }
 }
