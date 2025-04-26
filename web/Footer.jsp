@@ -5,7 +5,7 @@
     <footer class="content-footer footer bg-footer-theme">
         <div class="footer">
             <div class="container">
-                <div class="footer-top-at mb-2 mb-md-0">
+                <div class="footer-top-at mb-2 mb-md-0 row">
 
                     <div class="col-md-4 amet-sed">
                         <h4>MORE INFO</h4>

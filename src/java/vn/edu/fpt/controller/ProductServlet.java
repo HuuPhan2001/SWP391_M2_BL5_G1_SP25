@@ -12,13 +12,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
+import vn.edu.fpt.model.User;
 import vn.edu.fpt.service.ProductService;
 
 /**
  *
  * @author MTTTT
  */
-
 @MultipartConfig
 public class ProductServlet extends HttpServlet {
 
@@ -33,41 +33,62 @@ public class ProductServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getServletPath();
         System.out.println(action);
-//        User currentUser = getCurrentUser(request);
-//        if (currentUser == null) {
-//            request.getRequestDispatcher("login.jsp").forward(request, response);
-//        }
+        User user = (User) request.getSession().getAttribute("acc");
+        if (user == null) {
+            request.getRequestDispatcher("./Login.jsp").forward(request, response);
+            return;
+        }
         try {
-            if (action == null) {
-                productService.listAllProductPaging(request, response);
+            if (null == user.getRoleId()) {
+                request.getRequestDispatcher("./Login.jsp").forward(request, response);
             } else {
-                switch (action) {
-                    case "/new-product":
-                        productService.showNewForm(request, response);
+                Integer roleId = user.getRoleId();
+                switch (roleId) {
+                    case 3:
+                        switch (action) {
+                            case "/all-product":
+                                productService.listAllProductPagingCustomer(request, response);
+                                break;
+                            case "/product-detail":
+                                productService.listAllProductPagingCustomer(request, response);
+                                break;
+                            default:
+                                productService.listAllProductPagingCustomer(request, response);
+                        }
                         break;
-                    case "/edit-product":
-                        productService.showEditForm(request, response);
-                        break;
-                    case "/view-product":
-                        productService.showEditForm(request, response);
-                        break;
-                    case "/delete-product":
-                        productService.deleteProduct(request, response);
-                        break;
-                    case "/list-product":
-                        productService.listAllProductPaging(request, response);
-                        break;
-                    case "/create-product":
-                        productService.createProduct(request, response);
-                        break;
-                    case "/update-product":
-                        productService.updateProduct(request, response);
-                        break;
+                    case 1:
+                        switch (action) {
+                            case "/new-product":
+                                productService.showNewForm(request, response);
+                                break;
+                            case "/edit-product":
+                                productService.showEditForm(request, response);
+                                break;
+                            case "/view-product":
+                                productService.showEditForm(request, response);
+                                break;
+                            case "/delete-product":
+                                productService.deleteProduct(request, response);
+                                break;
+                            case "/list-product":
+                                productService.listAllProductPaging(request, response);
+                                break;
+                            case "/create-product":
+                                productService.createProduct(request, response);
+                                break;
+                            case "/update-product":
+                                productService.updateProduct(request, response);
+                                break;
 //                    case "/update-product-status":
 //                        productService.updateProductStatus(request, response);
 //                        break;
+                            default:
+                                productService.listAllProductPaging(request, response);
+                        }
+                        break;
                     default:
-                        productService.listAllProductPaging(request, response);
+                        request.getRequestDispatcher("./Login.jsp").forward(request, response);
+                        break;
                 }
             }
         } catch (SQLException ex) {

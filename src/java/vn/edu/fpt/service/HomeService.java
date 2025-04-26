@@ -4,10 +4,19 @@
  */
 package vn.edu.fpt.service;
 
+import vn.edu.fpt.dao.CategoryDao;
+import vn.edu.fpt.dao.CategoryTypeDao;
+import vn.edu.fpt.dao.ProductDao;
+
 /**
  *
  * @author MTTTT
  */
 public class HomeService {
+    private CategoryDao categoryDao = new CategoryDao();
+    private ProductDao productDao = new ProductDao();
+    private CategoryTypeDao categoryTypeDao = new CategoryTypeDao();
+    
+//    public 
     
 }

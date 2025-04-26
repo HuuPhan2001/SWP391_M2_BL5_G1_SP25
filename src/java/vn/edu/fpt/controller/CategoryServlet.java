@@ -10,8 +10,10 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import vn.edu.fpt.service.CategoryService;
 import java.sql.SQLException;
+import vn.edu.fpt.model.User;
 
 /**
  *
@@ -30,10 +32,15 @@ public class CategoryServlet extends HttpServlet {
             throws ServletException, IOException {
         String action = request.getServletPath();
         System.out.println(action);
-//        User currentUser = getCurrentUser(request);
-//        if (currentUser == null) {
-//            request.getRequestDispatcher("login.jsp").forward(request, response);
-//        }
+        User user = (User) request.getSession().getAttribute("acc");
+        if (user == null || user.getRoleId() != 1) {
+            HttpSession session = request.getSession(false);
+            if (session != null) {
+                session.invalidate();
+            }
+            request.getRequestDispatcher("./Login.jsp").forward(request, response);
+            return;
+        }
         try {
             if (action == null) {
                 categoryService.listAllCatePaging(request, response);
