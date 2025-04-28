@@ -104,6 +104,7 @@
                         <li><a class="color1" href="<%=request.getContextPath()%>/list-voucher">Voucher</a></li>
                         <li><a class="color1" href="<%=request.getContextPath()%>/all-product">All Product</a></li>
                         <li><a class="color1" href="<%=request.getContextPath()%>/list-order">Order</a></li>
+                        <li><a class="color1" href="<%=request.getContextPath()%>/list-feedback">Feedback</a></li>
                     </c:if>
                     <li><a class="color1" href="#">Men</a>
                         <div class="mepanel">

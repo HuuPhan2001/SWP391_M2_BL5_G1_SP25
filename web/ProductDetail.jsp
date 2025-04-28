@@ -261,6 +261,7 @@
                         <ul class="cd-tabs-navigation">
                             <li><a data-content="fashion" class="selected" href="#0">Description </a></li>
                             <li><a data-content="cinema" href="#0" >Additional Information</a></li>
+                            <li><a data-content="television" href="#0">Reviews</a></li>
                         </ul> 
 
                     </nav>
@@ -284,42 +285,103 @@
                                 </div>
                             </div>
                         </li>
+                        <li data-content="television">
+                            <div class="feedback-section">
+                                <div id="feedbackForm" class="mb-4">
+                                    <h5>Write a Review</h5>
+                                    <form id="submitFeedbackForm" onsubmit="return submitFeedback(event)">
+                                        <input type="hidden" name="productId" id="productId" value="${product.productId}" />
+                                        <input type="hidden" name="userId" id="userId" value="${sessionScope.acc.userId}" />
+                                        <input type="hidden" name="feedbackId" id="feedbackId" id="editFeedbackId" value="" />
+
+                                        <div class="mb-3">
+                                            <label class="form-label">Rating</label>
+                                            <div class="rating" style="display: flex; justify-content: center; gap: 5px;">
+                                                <c:forEach begin="1" end="5" var="i">
+                                                    <input type="radio" name="rating" value="${i}" id="star${i}" style="display: none;" required>
+                                                    <label for="star${i}" style="cursor: pointer; font-size: 32px; color: #ccc;">
+                                                        <i class='bx bx-star'></i>
+                                                    </label>
+                                                </c:forEach>
+                                            </div>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="feedbackComment" class="form-label">Your Review</label>
+                                            <textarea class="form-control" id="feedbackComment" name="comment" rows="3" required></textarea>
+                                        </div>
+
+                                        <button type="submit" class="btn btn-primary" id="feedbackSubmitBtn">Submit Review</button>
+                                        <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;" onclick="cancelEdit()">Cancel Edit</button>
+                                    </form>
+                                </div>
+
+
+                                <div id="feedbackList">
+                                    <c:forEach var="feedback" items="${feedbacks}">
+                                        <div class="feedback-item" id="feedback-${feedback.feedbackId}">
+                                            <div class="d-flex justify-content-between">
+                                                <strong>${feedback.userName}</strong>
+                                                <c:if test="${sessionScope.acc.userId == feedback.userId}">
+                                                    <div>
+                                                        <button class="btn btn-sm btn-outline-primary" onclick="editFeedback(${feedback.feedbackId})">
+                                                            <i class="bx bx-edit-alt me-1"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteFeedback(${feedback.feedbackId})">
+                                                            <i class="bx bx-trash me-1"></i>
+                                                        </button>
+                                                    </div>
+                                                </c:if>
+                                            </div>
+                                            <div class="rating">
+                                                <c:forEach begin="1" end="5" var="i">
+                                                    <i class='bx ${i <= feedback.feedbackRating ? "bxs-star" : "bx-star"}'></i>
+                                                </c:forEach>
+                                            </div>
+
+                                            <p>${feedback.feedbackComment}</p>
+                                            <small>${feedback.createAt}</small>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </li>
                     </ul> 
                 </div> 
-<!--                <div class=" bottom-product row">
-                    <div class="col-md-4 bottom-cd simpleCart_shelfItem">
-                        <div class="product-at ">
-                            <a href="#"><img class="img-responsive" src="assets/images/pi3.jpg" alt="">
-                                <div class="pro-grid">
-                                    <span class="buy-in">Buy Now</span>
-                                </div>
-                            </a>	
-                        </div>
-                        <p class="tun">It is a long established fact that a reader</p>
-                        <a href="#" class="item_add"><p class="number item_price"><i> </i>$500.00</p></a>						
-                    </div>
-                    <div class="col-md-4 bottom-cd simpleCart_shelfItem">
-                        <div class="product-at ">
-                            <a href="#"><img class="img-responsive" src="assets/images/pi1.jpg" alt="">
-                                <div class="pro-grid">
-                                    <span class="buy-in">Buy Now</span>
-                                </div>
-                            </a>	
-                        </div>
-                        <p class="tun">It is a long established fact that a reader</p>
-                        <a href="#" class="item_add"><p class="number item_price"><i> </i>$500.00</p></a>					</div>
-                    <div class="col-md-4 bottom-cd simpleCart_shelfItem">
-                        <div class="product-at ">
-                            <a href="#"><img class="img-responsive" src="assets/images/pi4.jpg" alt="">
-                                <div class="pro-grid">
-                                    <span class="buy-in">Buy Now</span>
-                                </div>
-                            </a>	
-                        </div>
-                        <p class="tun">It is a long established fact that a reader</p>
-                        <a href="#" class="item_add"><p class="number item_price"><i> </i>$500.00</p></a>					</div>
-                    <div class="clearfix"> </div>
-                </div>-->
+                <!--                <div class=" bottom-product row">
+                                    <div class="col-md-4 bottom-cd simpleCart_shelfItem">
+                                        <div class="product-at ">
+                                            <a href="#"><img class="img-responsive" src="assets/images/pi3.jpg" alt="">
+                                                <div class="pro-grid">
+                                                    <span class="buy-in">Buy Now</span>
+                                                </div>
+                                            </a>	
+                                        </div>
+                                        <p class="tun">It is a long established fact that a reader</p>
+                                        <a href="#" class="item_add"><p class="number item_price"><i> </i>$500.00</p></a>						
+                                    </div>
+                                    <div class="col-md-4 bottom-cd simpleCart_shelfItem">
+                                        <div class="product-at ">
+                                            <a href="#"><img class="img-responsive" src="assets/images/pi1.jpg" alt="">
+                                                <div class="pro-grid">
+                                                    <span class="buy-in">Buy Now</span>
+                                                </div>
+                                            </a>	
+                                        </div>
+                                        <p class="tun">It is a long established fact that a reader</p>
+                                        <a href="#" class="item_add"><p class="number item_price"><i> </i>$500.00</p></a>					</div>
+                                    <div class="col-md-4 bottom-cd simpleCart_shelfItem">
+                                        <div class="product-at ">
+                                            <a href="#"><img class="img-responsive" src="assets/images/pi4.jpg" alt="">
+                                                <div class="pro-grid">
+                                                    <span class="buy-in">Buy Now</span>
+                                                </div>
+                                            </a>	
+                                        </div>
+                                        <p class="tun">It is a long established fact that a reader</p>
+                                        <a href="#" class="item_add"><p class="number item_price"><i> </i>$500.00</p></a>					</div>
+                                    <div class="clearfix"> </div>
+                                </div>-->
             </div>
         </div>
     </div>
@@ -417,5 +479,192 @@
                 showNotification(`Order #${orderId} placed successfully!`, 'success');
             }
         });
+    </script>
+    <script>
+        $(document).ready(function () {
+            function updateStars(rating) {
+                $('.rating label i').each(function () {
+                    const value = $(this).parent().prev('input').val();
+                    if (value <= rating) {
+                        $(this).removeClass('bx-star').addClass('bxs-star').css('color', '#ffc107');
+                    } else {
+                        $(this).removeClass('bxs-star').addClass('bx-star').css('color', '#ccc');
+                    }
+                });
+            }
+
+            $('input[name="rating"]').change(function () {
+                var selectedRating = $(this).val();
+                updateStars(selectedRating);
+            });
+
+            $('.rating label').hover(function () {
+                var hoverRating = $(this).prev('input').val();
+                updateStars(hoverRating);
+            }, function () {
+                var selectedRating = $('input[name="rating"]:checked').val() || 0;
+                updateStars(selectedRating);
+            });
+        });
+    </script>
+    <script>
+        function submitFeedback(event) {
+            event.preventDefault();
+            const form = $('#submitFeedbackForm')[0];
+            const formData = new FormData(form);
+            const feedbackId = $('#editFeedbackId').val();
+
+            if (feedbackId) {
+                formData.append('feedbackId', feedbackId);
+            }
+
+            const data = {
+                productId: $('#productId').val(),
+                userId: $('#userId').val(),
+                rating: $('#rating').val(),
+                comment: $('#comment').val()
+            };
+
+            console.log("Sending data:", data);  // Debug log
+
+
+            $.ajax({
+                url: 'ajax-feedback',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.success) {
+                        $('#submitFeedbackForm')[0].reset();
+                        $('#editFeedbackId').val('');
+                        $('#cancelEditBtn').hide();
+                        $('#feedbackSubmitBtn').text('Submit Review');
+                        location.reload();
+                    } else {
+                        alert(data.message || 'Error saving feedback');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    if (xhr.status === 302) {
+                        showNotification('Your session has expired. Please login again.', 'error');
+                        window.location.href = 'login';
+                        return;
+                    }
+                }
+
+            });
+
+            return false;
+        }
+
+        function editFeedback(feedbackId) {
+            if (!feedbackId) {
+                console.error('No feedback ID provided');
+                return;
+            }
+
+            $.ajax({
+                url: 'get-feedback?id=' + feedbackId,
+                type: 'GET',
+                dataType: 'json',
+                success: function (feedback) {
+                    if (feedback && feedback.feedbackId) {
+                        $('#editFeedbackId').val(feedback.feedbackId);
+                        $('#feedbackComment').val(feedback.feedbackComment);
+
+                        const rating = Math.round(feedback.feedbackRating);
+                        const ratingInput = $(`input[name="rating"][value="${rating}"]`);
+                        if (ratingInput.length) {
+                            ratingInput.prop('checked', true);
+                        }
+
+                        $('#cancelEditBtn').show();
+                        $('#feedbackSubmitBtn').text('Update Review');
+
+                        $('#feedbackComment')[0].scrollIntoView({behavior: 'smooth'});
+                        $('#feedbackComment').focus();
+                    } else {
+                        alert('Could not load feedback for editing');
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error('Error:', error);
+                    alert('Error loading feedback');
+                }
+            });
+        }
+
+        function cancelEdit() {
+            const form = document.getElementById('submitFeedbackForm');
+            form.reset();
+            document.getElementById('editFeedbackId').value = '';
+            document.getElementById('cancelEditBtn').style.display = 'none';
+            document.getElementById('feedbackSubmitBtn').textContent = 'Submit Review';
+        }
+
+        function deleteFeedback(feedbackId) {
+            if (confirm('Are you sure you want to delete this review?')) {
+                fetch(`delete-feedback?id=${feedbackId}`, {
+                    method: 'POST'
+                })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                loadFeedbacks(${product.productId});
+                            } else {
+                                alert(data.message || 'Error deleting feedback');
+                            }
+                        });
+            }
+        }
+
+        const currentUserId = ${sessionScope.acc.userId};
+
+        function loadFeedbacks(productId) {
+            fetch(`get-product-feedbacks?productId=${productId}`)
+                    .then(response => response.json())
+                    .then(feedbacks => {
+                        const feedbackList = document.getElementById('feedbackList');
+                        let html = '';
+
+                        feedbacks.forEach(feedback => {
+                            let starsHtml = '';
+                            for (let i = 1; i <= 5; i++) {
+                                starsHtml += `<i class="bi ${i <= feedback.feedbackRating ? 'bi-star-fill' : 'bi-star'}"></i>`;
+                            }
+
+                            html += `
+                <div class="feedback-item" id="feedback-${feedback.feedbackId}">
+                    <div class="d-flex justify-content-between">
+                        <strong>${feedback.userName}</strong>`;
+
+                            if (feedback.userId == currentUserId) {
+                                html += `
+                        <div>
+                            <button class="btn btn-sm btn-outline-primary" onclick="editFeedback(${feedback.feedbackId})">
+                                <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-outline-danger" onclick="deleteFeedback(${feedback.feedbackId})">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>`;
+                            }
+
+                            html += `
+                    </div>
+                    <div class="rating">
+        ${starsHtml}
+                    </div>
+                    <p>${feedback.feedbackComment}</p>
+                    <small>${feedback.createAt}</small>
+                </div>`;
+                        });
+
+                        feedbackList.innerHTML = html;
+                    })
+                    .catch(error => console.error('Error:', error));
+        }
+
     </script>
 </html>

@@ -26,14 +26,17 @@ import vn.edu.fpt.common.PaginatedResult;
 import vn.edu.fpt.common.Pagination;
 import vn.edu.fpt.dao.CategoryDao;
 import vn.edu.fpt.dao.CategoryTypeDao;
+import vn.edu.fpt.dao.FeedbackDao;
 import vn.edu.fpt.dao.ProductDao;
 import vn.edu.fpt.dto.CategoryDto;
+import vn.edu.fpt.dto.FeedbackDto;
 import vn.edu.fpt.dto.ProductCategoryDto;
 import vn.edu.fpt.dto.ProductDto;
 import vn.edu.fpt.model.Category;
 import vn.edu.fpt.model.CategoryType;
 import vn.edu.fpt.model.Product;
 import vn.edu.fpt.model.ProductImage;
+import vn.edu.fpt.model.UserFeedback;
 
 /**
  *
@@ -44,6 +47,7 @@ public class ProductService {
     private ProductDao productDao = new ProductDao();
     private CategoryDao categoryDao = new CategoryDao();
     private CategoryTypeDao categoryTypeDao = new CategoryTypeDao();
+    private FeedbackDao feedbackDao = new FeedbackDao();
 
     public void listAllProductPaging(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
@@ -514,6 +518,9 @@ public class ProductService {
         List<Category> colorCategories = getColorCategories(listCate);
         request.setAttribute("sizeCategories", sizeCategories);
         request.setAttribute("colorCategories", colorCategories);
+        
+        List<FeedbackDto> feedbacks = feedbackDao.getFeedbackByProduct(productId);
+        request.setAttribute("feedbacks", feedbacks);
 
         request.getRequestDispatcher("ProductDetail.jsp").forward(request, response);
     }
