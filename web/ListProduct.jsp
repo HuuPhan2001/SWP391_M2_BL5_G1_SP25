@@ -250,12 +250,14 @@
                     </div>
                 </div>
                 <div class="col-md-9 product1">
-                    <div class="bottom-product">
+                    <div class="bottom-product row">
                         <c:forEach var="product" items="${products}" varStatus="loop">
                             <div class="col-md-4 bottom-cd product">
                                 <div class="product-at">
-                                    <a href="<%=request.getContextPath()%>/product-detail?id=${product.productId}">
-                                        <img class="img-responsive" src="${product.productAvatar}" alt="${product.productName}">
+                                    <a href="product-detail?id=${product.productId}">
+                                        <div class="product-image-container">
+                                            <img class="img-responsive" src="${product.productAvatar}" alt="${product.productName}">
+                                        </div>
                                         <div class="pro-grid">
                                             <span class="buy-in">Buy Now</span>
                                         </div>

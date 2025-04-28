@@ -410,7 +410,7 @@ public class ProductService {
         }
         response.sendRedirect("product");
     }
-    
+
     public void listAllProductPagingCustomer(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
         String text = request.getParameter("text");
@@ -480,7 +480,7 @@ public class ProductService {
             response.sendError(500, "Error loading product list");
         }
     }
-    
+
     public void productDetail(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, ServletException, IOException {
 
@@ -509,6 +509,36 @@ public class ProductService {
         request.setAttribute("product", product);
         request.setAttribute("selectedCategoryIds", listCateId);
         request.setAttribute("productImages", listImg);
+
+        List<Category> sizeCategories = getSizeCategories(listCate);
+        List<Category> colorCategories = getColorCategories(listCate);
+        request.setAttribute("sizeCategories", sizeCategories);
+        request.setAttribute("colorCategories", colorCategories);
+
         request.getRequestDispatcher("ProductDetail.jsp").forward(request, response);
+    }
+
+    private List<Category> getSizeCategories(List<ProductCategoryDto> categories) {
+        return categories.stream()
+                .filter(cat -> cat.getCategoryName().toLowerCase().contains("size"))
+                .map(cat -> {
+                    Category category = new Category();
+                    category.setCategoryId(cat.getCategoryId());
+                    category.setCategoryName(cat.getCategoryName());
+                    return category;
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<Category> getColorCategories(List<ProductCategoryDto> categories) {
+        return categories.stream()
+                .filter(cat -> cat.getCategoryName().toLowerCase().contains("color"))
+                .map(cat -> {
+                    Category category = new Category();
+                    category.setCategoryId(cat.getCategoryId());
+                    category.setCategoryName(cat.getCategoryName());
+                    return category;
+                })
+                .collect(Collectors.toList());
     }
 }
