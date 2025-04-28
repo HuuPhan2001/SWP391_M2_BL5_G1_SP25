@@ -4,6 +4,7 @@
  */
 package vn.edu.fpt.dao;
 
+import java.math.BigDecimal;
 import vn.edu.fpt.common.Pagination;
 import vn.edu.fpt.config.DbContext;
 import java.sql.*;
@@ -12,8 +13,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 import vn.edu.fpt.common.Common;
 import vn.edu.fpt.common.PaginatedResult;
+import static vn.edu.fpt.config.DbContext.getConnection;
 import vn.edu.fpt.dto.ProductCategoryDto;
 import vn.edu.fpt.dto.ProductDto;
+import vn.edu.fpt.model.CartItem;
 import vn.edu.fpt.model.Product;
 import vn.edu.fpt.model.ProductImage;
 
@@ -330,6 +333,39 @@ public class ProductDao extends DbContext {
             e.printStackTrace();
         }
         return pro;
+    }
+    
+    public BigDecimal calculateTotalPrice(List<CartItem> cartItems) throws SQLException {
+        if (cartItems == null || cartItems.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        String sql = "SELECT product_price FROM product WHERE product_id = ? AND status <> 2";
+
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            for (CartItem item : cartItems) {
+                ps.setInt(1, item.getProductId());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        BigDecimal price = rs.getBigDecimal("product_price");
+                        totalPrice = totalPrice.add(price.multiply(new BigDecimal(item.getQuantity())));
+                    }
+                }
+            }
+        }
+
+        return totalPrice;
+    }
+
+    public int calculateTotalItems(List<CartItem> cartItems) {
+        if (cartItems == null || cartItems.isEmpty()) {
+            return 0;
+        }
+
+        return cartItems.stream()
+                .mapToInt(CartItem::getQuantity)
+                .sum();
     }
 
 }

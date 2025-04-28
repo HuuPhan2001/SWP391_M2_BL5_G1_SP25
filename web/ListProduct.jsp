@@ -6,6 +6,125 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>All Products</title>
         <jsp:include page="Header.jsp"/>
+        <script>
+            $(document).ready(function() {
+                $('.item_add').on('click', function(e) {
+                    e.preventDefault();
+
+                    const productId = $(this).find('.item_product_id').val();
+                    const quantity = parseInt($(this).find('.item_quantity').val());
+                    const productName = $(this).find('.item_name').val();
+                    const productPrice = parseFloat($(this).find('.item_price').text().replace('$', ''));
+
+                    addToCart(productId, quantity, productName, productPrice);
+                });
+            });
+
+            function addToCart(productId, quantity, productName, productPrice) {
+                $.ajax({
+                    url: 'add-to-cart',
+                    type: 'POST',
+                    data: {
+                        productId: productId,
+                        quantity: quantity
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            updateCartDisplay(response.totalItems, response.totalPrice);
+                            showNotification(`Added ${productName} to your cart`);
+                        } else {
+                            showNotification('Failed to add item to cart: ' + response.error, 'error');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        showNotification('Error adding to cart. Please try again.', 'error');
+                        console.error('AJAX Error: ' + status + ' - ' + error);
+                    }
+                });
+            }
+            function updateCartDisplay(totalItems, totalPrice) {
+                $('.cart-count').text(totalItems);
+                $('.cart-total').text('$' + totalPrice.toFixed(2));
+                $('.cart-count, .cart-total').addClass('updated');
+                setTimeout(function() {
+                    $('.cart-count, .cart-total').removeClass('updated');
+                }, 1000);
+            }
+            function showNotification(message, type = 'success') {
+                if ($('#notification-container').length === 0) {
+                    $('body').append('<div id="notification-container"></div>');
+                }
+                const notification = $('<div class="notification ' + type + '">' + message + '</div>');
+                $('#notification-container').append(notification);
+                setTimeout(function() {
+                    notification.addClass('show');
+                }, 10);
+                setTimeout(function() {
+                    notification.removeClass('show');
+                    setTimeout(function() {
+                        notification.remove();
+                    }, 300);
+                }, 3000);
+            }
+            $(document).ready(function() {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('orderId')) {
+                    const orderId = urlParams.get('orderId');
+                    showNotification(`Order #${orderId} placed successfully!`, 'success');
+                }
+            });
+        </script>
+        <style>
+            #notification-container {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+            }
+
+            .notification {
+                background-color: #4CAF50;
+                color: white;
+                padding: 12px 20px;
+                margin-bottom: 10px;
+                border-radius: 4px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                opacity: 0;
+                transform: translateY(-20px);
+                transition: all 0.3s ease;
+            }
+
+            .notification.show {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            .notification.error {
+                background-color: #f44336;
+            }
+            .cart-count.updated, .cart-total.updated {
+                animation: highlight 1s ease;
+            }
+
+            @keyframes highlight {
+                0% { color: inherit; }
+                50% { color: #4CAF50; }
+                100% { color: inherit; }
+            }
+            .pro-grid:hover .buy-in {
+                background-color: #4CAF50;
+                transition: background-color 0.3s ease;
+            }
+            .item_add {
+                cursor: pointer;
+                transition: all 0.3s ease;
+            }
+
+            .item_add:hover {
+                opacity: 0.8;
+            }
+        </style>
     </head>
     <body>
         <div class="product">
@@ -133,7 +252,7 @@
                 <div class="col-md-9 product1">
                     <div class="bottom-product">
                         <c:forEach var="product" items="${products}" varStatus="loop">
-                            <div class="col-md-4 bottom-cd simpleCart_shelfItem">
+                            <div class="col-md-4 bottom-cd product">
                                 <div class="product-at">
                                     <a href="<%=request.getContextPath()%>/product-detail?id=${product.productId}">
                                         <img class="img-responsive" src="${product.productAvatar}" alt="${product.productName}">
@@ -143,8 +262,11 @@
                                     </a>    
                                 </div>
                                 <p class="tun">${product.productName}</p>
-                                <a href="#" class="item_add">
+                                <a href="javascript:;" class="item_add">
                                     <p class="number item_price"><i> </i>$${product.productPrice}</p>
+                                    <input type="hidden" class="item_name" value="${product.productName}">
+                                    <input type="hidden" class="item_product_id" value="${product.productId}">
+                                    <input type="hidden" class="item_quantity" value="1">
                                 </a>                        
                             </div>
                             <c:if test="${loop.index % 3 == 2 || loop.last}">
