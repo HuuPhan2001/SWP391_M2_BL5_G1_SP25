@@ -1,13 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package vn.edu.fpt.model;
 
 import java.sql.Timestamp;
 
 public class OrderDetail {
-
     private int orderDetailId;
     private Integer orderId;
     private Integer productId;
@@ -17,24 +12,11 @@ public class OrderDetail {
     private Timestamp createAt;
     private Timestamp updateAt;
     private Integer productOptionId;
-    private int isFeedback;
+    private Integer isFeedback;
+    private String productName; // For display (joined from product table)
+    private String productAvatar; // For display (joined from product table)
 
-    public OrderDetail() {
-    }
-
-    public OrderDetail(int orderDetailId, Integer orderId, Integer productId, Integer quantity, Integer unitPrice, String note, Timestamp createAt, Timestamp updateAt, Integer productOptionId, int isFeedback) {
-        this.orderDetailId = orderDetailId;
-        this.orderId = orderId;
-        this.productId = productId;
-        this.quantity = quantity;
-        this.unitPrice = unitPrice;
-        this.note = note;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-        this.productOptionId = productOptionId;
-        this.isFeedback = isFeedback;
-    }
-
+    // Getters and Setters
     public int getOrderDetailId() {
         return orderDetailId;
     }
@@ -107,12 +89,27 @@ public class OrderDetail {
         this.productOptionId = productOptionId;
     }
 
-    public int getIsFeedback() {
+    public Integer getIsFeedback() {
         return isFeedback;
     }
 
-    public void setIsFeedback(int isFeedback) {
+    public void setIsFeedback(Integer isFeedback) {
         this.isFeedback = isFeedback;
     }
 
+    public String getProductName() {
+        return productName;
+    }
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public String getProductAvatar() {
+        return productAvatar;
+    }
+
+    public void setProductAvatar(String productAvatar) {
+        this.productAvatar = productAvatar;
+    }
 }
