@@ -2,31 +2,39 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package vn.edu.fpt.model;
+package vn.edu.fpt.dto;
 
 import java.sql.Timestamp;
 
-public class UserFeedback {
+/**
+ *
+ * @author MTTTT
+ */
+public class FeedbackDto {
 
     private int feedbackId;
     private Float feedbackRating;
     private String feedbackComment;
     private Integer userId;
+    private String userName;
     private Integer productId;
     private Timestamp createAt;
     private Timestamp updateAt;
+    private String productName;
 
-    public UserFeedback() {
+    public FeedbackDto() {
     }
 
-    public UserFeedback(int feedbackId, Float feedbackRating, String feedbackComment, Integer userId, Integer productId, Timestamp createAt, Timestamp updateAt) {
+    public FeedbackDto(int feedbackId, Float feedbackRating, String feedbackComment, Integer userId, String userName, Integer productId, Timestamp createAt, Timestamp updateAt, String productName) {
         this.feedbackId = feedbackId;
         this.feedbackRating = feedbackRating;
         this.feedbackComment = feedbackComment;
         this.userId = userId;
+        this.userName = userName;
         this.productId = productId;
         this.createAt = createAt;
         this.updateAt = updateAt;
+        this.productName = productName;
     }
 
     public int getFeedbackId() {
@@ -61,6 +69,14 @@ public class UserFeedback {
         this.userId = userId;
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     public Integer getProductId() {
         return productId;
     }
@@ -85,10 +101,12 @@ public class UserFeedback {
         this.updateAt = updateAt;
     }
 
-    @Override
-    public String toString() {
-        return "UserFeedback{" + "feedbackId=" + feedbackId + ", feedbackRating=" + feedbackRating + ", feedbackComment=" + feedbackComment + ", userId=" + userId + ", productId=" + productId + ", createAt=" + createAt + ", updateAt=" + updateAt + '}';
+    public String getProductName() {
+        return productName;
     }
 
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
     
 }
