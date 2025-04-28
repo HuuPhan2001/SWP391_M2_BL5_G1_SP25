@@ -50,7 +50,7 @@ public class ProductServlet extends HttpServlet {
                                 productService.listAllProductPagingCustomer(request, response);
                                 break;
                             case "/product-detail":
-                                productService.listAllProductPagingCustomer(request, response);
+                                productService.productDetail(request, response);
                                 break;
                             default:
                                 productService.listAllProductPagingCustomer(request, response);

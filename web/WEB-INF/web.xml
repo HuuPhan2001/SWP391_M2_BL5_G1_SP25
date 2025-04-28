@@ -63,6 +63,7 @@
         <url-pattern>/delete-product</url-pattern>
         <url-pattern>/update-product-status</url-pattern>
         <url-pattern>/all-product</url-pattern>
+        <url-pattern>/product-detail</url-pattern>
     </servlet-mapping>
     <welcome-file-list>
         <welcome-file>home</welcome-file>
