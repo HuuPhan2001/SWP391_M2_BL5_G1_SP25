@@ -4,6 +4,7 @@
  */
 package vn.edu.fpt.model;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class CartItem {
@@ -15,7 +16,9 @@ public class CartItem {
     private String note;
     private Timestamp createAt;
     private Timestamp updateAt;
-
+    private String productName;
+    private BigDecimal productPrice;
+    private String productAvatar;
     public CartItem() {
     }
 
@@ -84,5 +87,27 @@ public class CartItem {
     public void setUpdateAt(Timestamp updateAt) {
         this.updateAt = updateAt;
     }
+    public String getProductName() {
+        return productName;
+    }
 
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public BigDecimal getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(BigDecimal productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public String getProductAvatar() {
+        return productAvatar;
+    }
+
+    public void setProductAvatar(String productAvatar) {
+        this.productAvatar = productAvatar;
+    }
 }
