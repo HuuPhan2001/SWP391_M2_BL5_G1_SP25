@@ -118,12 +118,50 @@ public class CategoryService {
     public void createCategory(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         try {
-            Category newCategory = new Category();
-            newCategory.setCategoryName(request.getParameter("name"));
-            newCategory.setCategoryDesc(request.getParameter("description"));
-            newCategory.setCategoryTypeId(Integer.parseInt(request.getParameter("typeId")));
+            String name = request.getParameter("name");
+            String description = request.getParameter("description");
+            String banner = request.getParameter("banner");
+            String typeIdRaw = request.getParameter("typeId");
+            String statusRaw = request.getParameter("status");
 
+            int status = (statusRaw != null) ? 1 : 0;
+
+            int typeId = 0;
+            try {
+                typeId = Integer.parseInt(typeIdRaw);
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Invalid category type.");
+                return;
+            }
+
+            Category newCategory = new Category();
+            newCategory.setCategoryName(name.trim());
+            newCategory.setCategoryDesc((description != null) ? description.trim() : "");
+            newCategory.setCategoryTypeId(typeId);
+            newCategory.setCategoryBanner((banner != null) ? banner.trim() : "");
+            newCategory.setStatus(status);
             System.out.println(newCategory.toString());
+
+            if (name.trim().isEmpty() || name.trim().length() >= 255 || name.startsWith(" ")) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", newCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+
+            if (description != null && (description.trim().length() >= 255 || description.startsWith(" "))) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", newCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+
+            if (banner != null && (banner.trim().length() >= 255 || banner.startsWith(" "))) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", newCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
 
             List<Category> flag = categoryDao.checkNameExist(newCategory.getCategoryName());
             if (flag != null && !flag.isEmpty()) {
@@ -132,10 +170,8 @@ public class CategoryService {
 
                 request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.NAME_EXIST);
 
-                request.setAttribute("category", newCategory);
-
-                request.getRequestDispatcher("./category/FormCategory.jsp").forward(request, response);
-
+                request.getSession().setAttribute("formData", newCategory);
+                response.sendRedirect("new-category");
             } else {
                 categoryDao.createCategory(newCategory);
                 request.getSession().setAttribute("successMessage", Constant.ADD_SUCCESS);
@@ -152,16 +188,53 @@ public class CategoryService {
         try {
             int categoryId = Integer.parseInt(request.getParameter("id"));
             Category existingCategory = categoryDao.getCategoryById(categoryId);
+            String name = request.getParameter("name");
+            String description = request.getParameter("description");
+            String banner = request.getParameter("banner");
+            String typeIdRaw = request.getParameter("typeId");
+            String statusRaw = request.getParameter("status");
 
-            existingCategory.setCategoryName(request.getParameter("name"));
-            existingCategory.setCategoryDesc(request.getParameter("description"));
-            existingCategory.setCategoryTypeId(Integer.parseInt(request.getParameter("typeId")));
-            existingCategory.setStatus(Integer.parseInt(request.getParameter("status")));
+            int typeId = 0;
+            try {
+                typeId = Integer.parseInt(typeIdRaw);
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Invalid category type.");
+                return;
+            }
 
+            int status = (statusRaw != null) ? 1 : 0;
+
+            existingCategory.setCategoryName(name.trim());
+            existingCategory.setCategoryDesc((description != null) ? description.trim() : "");
+            existingCategory.setCategoryBanner((banner != null) ? banner.trim() : "");
+            existingCategory.setCategoryTypeId(typeId);
+            existingCategory.setStatus(status);
             existingCategory.setUpdateAt(new Timestamp(System.currentTimeMillis()));
-            List<Category> flag = categoryDao.checkNameExist(existingCategory.getCategoryName());
+            
+            if (name.trim().isEmpty() || name.trim().length() >= 255 || name.startsWith(" ")) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", existingCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
 
-            if (flag != null && !flag.isEmpty() && flag.get(0).getCategoryId() != categoryId) {
+            if (description != null && (description.trim().length() >= 255 || description.startsWith(" "))) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", existingCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+
+            if (banner != null && (banner.trim().length() >= 255 || banner.startsWith(" "))) {
+                request.getSession().setAttribute("errorMessage", Constant.ADD_FAILED + ": " + Constant.DATA_INVALID);
+                request.getSession().setAttribute("formData", existingCategory);
+                response.sendRedirect("new-category");
+                return;
+            }
+            
+            List<Category> flag = categoryDao.checkNameExist(existingCategory.getCategoryName());
+            boolean isDuplicate = flag.stream().anyMatch(ct -> ct.getCategoryId() != categoryId);
+            if (isDuplicate) {
                 Gson gson = new Gson();
                 request.getSession().setAttribute("failedCategory", gson.toJson(existingCategory));
 
@@ -170,8 +243,8 @@ public class CategoryService {
                 List<CategoryType> categoryTypes = categoryTypeDao.getAllCategoryTypes();
                 request.setAttribute("categoryTypes", categoryTypes);
 
-                request.setAttribute("category", existingCategory);
-                request.getRequestDispatcher("./category/category-form.jsp").forward(request, response);
+                request.getSession().setAttribute("formData", existingCategory);
+                response.sendRedirect("edit-category?id=" + categoryId);
             } else {
                 categoryDao.updateCategory(existingCategory);
 
@@ -179,7 +252,7 @@ public class CategoryService {
 
                 response.sendRedirect("category");
             }
-        } catch (ServletException | IOException | NumberFormatException | SQLException e) {
+        } catch (IOException | NumberFormatException | SQLException e) {
             request.getSession().setAttribute("errorMessage", "An error occurred: " + e.getMessage());
             response.sendRedirect(request.getContextPath() + "/category");
         }
@@ -211,4 +284,12 @@ public class CategoryService {
         request.getRequestDispatcher("./category/DetailCategory.jsp").forward(request, response);
     }
 
+    public void updateCategoryStatus(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        int categoryId = Integer.parseInt(request.getParameter("id"));
+        int status = Integer.parseInt(request.getParameter("status"));
+        categoryDao.updateCategoryStatus(categoryId, status);
+
+        response.sendRedirect("category");
+    }
 }

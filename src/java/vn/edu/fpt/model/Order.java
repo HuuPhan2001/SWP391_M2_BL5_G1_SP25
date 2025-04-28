@@ -1,18 +1,14 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package vn.edu.fpt.model;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 public class Order {
-
     private int orderId;
     private Integer userId;
     private Integer shopId;
     private Integer orderTotal;
-    private String orderStatus;
+    private String orderStatus; // e.g., Pending, Shipped, Delivered, Cancelled
     private int paymentStatus;
     private String address;
     private String district;
@@ -26,31 +22,10 @@ public class Order {
     private String province;
     private String orderCode;
     private Integer discount;
+    private List<OrderDetail> orderDetails;
+    private String userName; // For display (joined from user table)
 
-    public Order() {
-    }
-
-    public Order(int orderId, Integer userId, Integer shopId, Integer orderTotal, String orderStatus, int paymentStatus, String address, String district, String ward, String phoneReceiver, String nameReceiver, int shipCost, int paymentMethodId, Timestamp createAt, Timestamp updateAt, String province, String orderCode, Integer discount) {
-        this.orderId = orderId;
-        this.userId = userId;
-        this.shopId = shopId;
-        this.orderTotal = orderTotal;
-        this.orderStatus = orderStatus;
-        this.paymentStatus = paymentStatus;
-        this.address = address;
-        this.district = district;
-        this.ward = ward;
-        this.phoneReceiver = phoneReceiver;
-        this.nameReceiver = nameReceiver;
-        this.shipCost = shipCost;
-        this.paymentMethodId = paymentMethodId;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-        this.province = province;
-        this.orderCode = orderCode;
-        this.discount = discount;
-    }
-
+    // Getters and Setters
     public int getOrderId() {
         return orderId;
     }
@@ -195,4 +170,19 @@ public class Order {
         this.discount = discount;
     }
 
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

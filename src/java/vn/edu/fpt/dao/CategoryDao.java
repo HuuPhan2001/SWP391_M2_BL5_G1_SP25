@@ -8,6 +8,7 @@ import vn.edu.fpt.config.DbContext;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import vn.edu.fpt.common.Common;
 import vn.edu.fpt.common.PaginatedResult;
 import vn.edu.fpt.common.Pagination;
 import vn.edu.fpt.dto.CategoryDto;
@@ -79,8 +80,8 @@ public class CategoryDao extends DbContext {
         PaginatedResult<CategoryDto> result = new PaginatedResult<>();
         List<CategoryDto> categories = new ArrayList<>();
 
-        StringBuilder countSqlBuilder = new StringBuilder("SELECT COUNT(*) AS total FROM category c JOIN category_type ct ON c.category_type_id = ct.category_type_id WHERE 1=1 AND ct.status = 1 ");
-        StringBuilder sqlBuilder = new StringBuilder("SELECT c.category_id, c.category_type_id, c.category_name, c.category_desc, c.parent, c.category_banner, c.status, c.create_at, c.update_at, ct.category_type_name FROM category c JOIN category_type ct ON c.category_type_id = ct.category_type_id WHERE 1=1 AND ct.status = 1 ");
+        StringBuilder countSqlBuilder = new StringBuilder("SELECT COUNT(*) AS total FROM category c JOIN category_type ct ON c.category_type_id = ct.category_type_id WHERE 1=1 AND ct.status = 1 AND c.status <> 2 ");
+        StringBuilder sqlBuilder = new StringBuilder("SELECT c.category_id, c.category_type_id, c.category_name, c.category_desc, c.parent, c.category_banner, c.status, c.create_at, c.update_at, ct.category_type_name FROM category c JOIN category_type ct ON c.category_type_id = ct.category_type_id WHERE 1=1 AND ct.status = 1 AND c.status <> 2 ");
 
         List<Object> params = new ArrayList<>();
 
@@ -112,7 +113,7 @@ public class CategoryDao extends DbContext {
         sqlBuilder.append(" ORDER BY ").append(sortColumn).append(" ").append(sortDirection);
         sqlBuilder.append(" OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
 
-        try (Connection conn = getConnection(); PreparedStatement countStmt = prepareStatement(conn, countSqlBuilder.toString(), params)) {
+        try (Connection conn = getConnection(); PreparedStatement countStmt = Common.prepareStatement(conn, countSqlBuilder.toString(), params)) {
 
             try (ResultSet countRs = countStmt.executeQuery()) {
                 if (countRs.next()) {
@@ -123,10 +124,10 @@ public class CategoryDao extends DbContext {
             }
         }
 
-        params.add(pagination.getOffset() - 1);
+        params.add(pagination.getOffset());
         params.add(pagination.getSize());
 
-        try (Connection conn = getConnection(); PreparedStatement pstmt = prepareStatement(conn, sqlBuilder.toString(), params)) {
+        try (Connection conn = getConnection(); PreparedStatement pstmt = Common.prepareStatement(conn, sqlBuilder.toString(), params)) {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
@@ -140,23 +141,6 @@ public class CategoryDao extends DbContext {
         result.setPagination(pagination);
         return result;
 
-    }
-
-    private PreparedStatement prepareStatement(Connection conn, String sql, List<Object> params) throws SQLException {
-        PreparedStatement pstmt = conn.prepareStatement(sql);
-
-        for (int i = 0; i < params.size(); i++) {
-            Object param = params.get(i);
-            if (param instanceof String) {
-                pstmt.setString(i + 1, (String) param);
-            } else if (param instanceof Integer) {
-                pstmt.setInt(i + 1, (Integer) param);
-            } else if (param instanceof Boolean) {
-                pstmt.setBoolean(i + 1, (Boolean) param);
-            }
-        }
-
-        return pstmt;
     }
 
     private CategoryDto mapResultSetToCategoryDto(ResultSet rs) throws SQLException {
@@ -205,8 +189,8 @@ public class CategoryDao extends DbContext {
             }
             pstmt.setString(5, category.getCategoryBanner());
             pstmt.setInt(6, category.getStatus());
-            pstmt.setTimestamp(7, new Timestamp(category.getCreateAt().getTime()));
-            pstmt.setTimestamp(8, new Timestamp(category.getUpdateAt().getTime()));
+            pstmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+            pstmt.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
 
             return pstmt.executeUpdate() > 0;
         }
@@ -227,7 +211,7 @@ public class CategoryDao extends DbContext {
             }
             pstmt.setString(5, category.getCategoryBanner());
             pstmt.setInt(6, category.getStatus());
-            pstmt.setTimestamp(7, new Timestamp(category.getUpdateAt().getTime()));
+            pstmt.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
             pstmt.setInt(8, category.getCategoryId());
 
             return pstmt.executeUpdate() > 0;
@@ -244,16 +228,18 @@ public class CategoryDao extends DbContext {
     }
 
     public boolean updateCategoryStatus(int categoryId, int status) throws SQLException {
-        String sql = "UPDATE category SET status = ? WHERE category_id = ?";
+        String sql = "UPDATE category SET status = ?, update_at = ? WHERE category_id = ?";
 
         try (Connection conn = getConnection(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, status);
-            pstmt.setInt(2, categoryId);
+            pstmt.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+            pstmt.setInt(3, categoryId);
             return pstmt.executeUpdate() > 0;
         }
     }
     
     public List<Category> checkNameExist(String name) {
+        System.out.println(name);
         List<Category> list = new ArrayList<>();
 
         String query = "SELECT * FROM category WHERE category_name LIKE ? AND status = 1";
@@ -275,5 +261,35 @@ public class CategoryDao extends DbContext {
 
         return list;
     }
+    
+    public List<Category> getCategoryByType(int type) {
+        List<Category> list = new ArrayList<>();
 
+        String query = "SELECT * FROM category WHERE category_type_id = ? AND status <> 2";
+
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, type);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Category c = new Category();
+                c.setCategoryId(rs.getInt("category_id"));
+                c.setCategoryTypeId(rs.getInt("category_type_id"));
+                c.setCategoryName(rs.getString("category_name"));
+                c.setCategoryDesc(rs.getString("category_desc"));
+                c.setParent(rs.getInt("parent"));
+                c.setCategoryBanner(rs.getString("category_banner"));
+                c.setStatus(rs.getInt("status"));
+                c.setCreateAt(rs.getTimestamp("create_at"));
+                c.setUpdateAt(rs.getTimestamp("update_at"));
+                list.add(c);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+    
 }
