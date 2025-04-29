@@ -88,7 +88,7 @@ public class LoginServlet extends HttpServlet {
                 session.setAttribute("acc", user);
                 Integer roleId = user.getRoleId();
                 if (roleId != null && roleId == 1) {
-                    response.sendRedirect("adminDashboard.jsp");
+                    response.sendRedirect("adminDashboard");
                 } else if (roleId != null && roleId == 3) {
                     response.sendRedirect("HomePage.jsp");
                 } else {
