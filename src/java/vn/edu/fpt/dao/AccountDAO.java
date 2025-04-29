@@ -167,4 +167,64 @@ public class AccountDAO extends DbContext {
             return false;
         }
     }
+
+    public boolean saveForgotPasswordCode(String email, String code) {
+        String sql = "UPDATE [user] SET forgot_password_code = ?, update_at = GETDATE() WHERE user_email = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ps.setString(2, email);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public User getUserByResetCode(String code) {
+        String sql = "SELECT * FROM [user] WHERE forgot_password_code = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setUserEmail(rs.getString("user_email"));
+                user.setUserName(rs.getString("user_name"));
+                user.setForgotPasswordCode(rs.getString("forgot_password_code"));
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean resetPassword(int userId, String newPassword) {
+        String sql = "UPDATE [user] SET user_password = ?, forgot_password_code = NULL, update_at = GETDATE() WHERE user_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public int getUserCount() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM [user]";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }
+

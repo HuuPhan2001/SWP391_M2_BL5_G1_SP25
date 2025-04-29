@@ -58,6 +58,11 @@
                                     </label>
                                 </div>
                             </div>
+                            <div style="margin: 10px 0;">
+                                <a href="ForgotPassword.jsp" style="color: #337ab7; text-decoration: underline; font-size: 14px;">
+                                    Forgot Password?
+                                </a>
+                            </div>
                             <input type="submit" value="Login"> 
                         </form>
                     </div>
