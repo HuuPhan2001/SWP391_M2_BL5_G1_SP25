@@ -16,42 +16,50 @@
         <meta charset="UTF-8">
         <title>Chỉnh sửa thông tin cá nhân</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-         <script>
-        function validateForm() {
-            const fullName = document.getElementById("userFullName").value.trim();
-            const email = document.getElementById("userEmail").value.trim();
-            const phone = document.getElementById("phone").value.trim();
-            const idNumber = document.getElementById("identificationNumber").value.trim();
+        <script>
+            function validateForm() {
+                const fullName = document.getElementById("userFullName").value.trim();
+                const email = document.getElementById("userEmail").value.trim();
+                const phone = document.getElementById("phone").value.trim();
+                const idNumber = document.getElementById("identificationNumber").value.trim();
 
-            let errors = [];
+                let errors = [];
 
-            if (fullName === "") {
-                errors.push("Họ tên không được để trống.");
+                if (fullName === "") {
+                    errors.push("Họ tên không được để trống.");
+                }
+
+                const emailRegex = /^[a-zA-Z0-9]+@[\w.-]+\.\w{2,}$/;
+                if (!emailRegex.test(email)) {
+                    errors.push("Email không hợp lệ.");
+                }
+
+                if (!/^\d{9,11}$/.test(phone)) {
+                    errors.push("Số điện thoại phải từ 9 đến 11 chữ số.");
+                }
+
+                if (idNumber && !/^\d{9,12}$/.test(idNumber)) {
+                    errors.push("CMND/CCCD phải là số từ 9 đến 12 chữ số.");
+                }
+
+                if (errors.length > 0) {
+                    alert(errors.join("\n"));
+                    return false; // chặn không submit
+                }
+
+                return true; // cho phép submit
             }
-
-            const emailRegex = /^[\\w.-]+@[\\w.-]+\\.\\w{2,}$/;
-            if (!emailRegex.test(email)) {
-                errors.push("Email không hợp lệ.");
-            }
-
-            if (!/^\d{9,11}$/.test(phone)) {
-                errors.push("Số điện thoại phải từ 9 đến 11 chữ số.");
-            }
-
-            if (idNumber && !/^\d{9,12}$/.test(idNumber)) {
-                errors.push("CMND/CCCD phải là số từ 9 đến 12 chữ số.");
-            }
-
-            if (errors.length > 0) {
-                alert(errors.join("\n"));
-                return false; // chặn không submit
-            }
-
-            return true; // cho phép submit
-        }
-    </script>
+        </script>
     </head>
     <body>
+        <c:if test="${not empty sessionScope.error}">
+            <script>
+                window.onload = function () {
+                    alert("${sessionScope.error}");
+                };
+            </script>
+            <c:remove var="error" scope="session"/>
+        </c:if>
         <div class="container mt-4 mb-5">
             <h2 class="mb-4">Chỉnh sửa Thông tin cá nhân</h2>
             <form action="UpdateProfile" method="post" onsubmit="return validateForm();">

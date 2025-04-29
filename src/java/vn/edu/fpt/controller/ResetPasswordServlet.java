@@ -4,13 +4,13 @@
  */
 package vn.edu.fpt.controller;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Timestamp;
-import java.time.Instant;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import vn.edu.fpt.dao.AccountDAO;
 import vn.edu.fpt.model.User;
 
@@ -18,8 +18,8 @@ import vn.edu.fpt.model.User;
  *
  * @author ADMIN
  */
-@WebServlet(name = "UpdateProfileServlet", urlPatterns = {"/UpdateProfile"})
-public class UpdateProfileServlet extends HttpServlet {
+@WebServlet(name = "ResetPasswordServlet", urlPatterns = {"/reset-password"})
+public class ResetPasswordServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +38,10 @@ public class UpdateProfileServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateProfileServlet</title>");
+            out.println("<title>Servlet ResetPasswordServlet</title>");
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdateProfileServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ResetPasswordServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -59,7 +59,17 @@ public class UpdateProfileServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        String code = request.getParameter("code");
+        AccountDAO dao = new AccountDAO();
+        User user = dao.getUserByResetCode(code);
+
+        if (user != null) {
+            request.setAttribute("user", user);
+            request.getRequestDispatcher("ResetPassword.jsp").forward(request, response);
+        } else {
+            request.setAttribute("message", "Invalid or expired reset code.");
+            request.getRequestDispatcher("ForgotPassword.jsp").forward(request, response);
+        }
     }
 
     /**
@@ -73,50 +83,16 @@ public class UpdateProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            request.setCharacterEncoding("UTF-8");
-
-            int userId = Integer.parseInt(request.getParameter("userId"));
-            String fullName = request.getParameter("userFullName");
-            String email = request.getParameter("userEmail");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-            String avatar = request.getParameter("userAvatar");
-            String cccd = request.getParameter("identificationNumber");
-
-            // Lấy user hiện tại từ session
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("acc");
-
-            // Cập nhật các trường có thể sửa
-            currentUser.setUserFullName(fullName);
-            currentUser.setUserEmail(email);
-            currentUser.setPhone(phone);
-            currentUser.setAddress(address);
-            currentUser.setUserAvatar(avatar);
-            currentUser.setIdentificationNumber(cccd);
-            currentUser.setUpdateAt(Timestamp.from(Instant.now()));
-
-            // Gọi DAO để update
-            AccountDAO dao = new AccountDAO();
-
-            if (dao.isEmailExists(email)) {
-                // Ghi lỗi vào session
-                session.setAttribute("error", "Email đã tồn tại.");
-                response.sendRedirect("EditProfile.jsp");
-                return;
-            }
-
-            dao.updateUser(currentUser);
-
-            // Cập nhật lại session
-            session.setAttribute("acc", currentUser);
-
-            request.setAttribute("message", "Cập nhật thông tin thành công!");
-            request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().println("Có lỗi xảy ra: " + e.getMessage());
+        String newPassword = request.getParameter("newPassword");
+        int userId = Integer.parseInt(request.getParameter("userId"));
+        AccountDAO dao = new AccountDAO();
+        
+        if (dao.resetPassword(userId, newPassword)) {
+            request.setAttribute("message", "Password reset successful. Please login again.");
+            request.getRequestDispatcher("Login.jsp").forward(request, response);
+        } else {
+            request.setAttribute("message", "Error resetting password. Try again.");
+            request.getRequestDispatcher("ResetPassword.jsp").forward(request, response);
         }
     }
 

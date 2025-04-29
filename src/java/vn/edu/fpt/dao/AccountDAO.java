@@ -23,7 +23,7 @@ public class AccountDAO extends DbContext {
         String sql = "SELECT *"
                 + "FROM [user] u "
                 + "WHERE u.user_name = ? AND u.user_password = ?";
-        try (Connection conn = getConnection(); PreparedStatement st = conn.prepareStatement(sql)){
+        try (Connection conn = getConnection(); PreparedStatement st = conn.prepareStatement(sql)) {
             st.setString(1, username);
             st.setString(2, password);
 
@@ -142,4 +142,89 @@ public class AccountDAO extends DbContext {
             return false;
         }
     }
+
+    public boolean changePassword(int userId, String newPassword) {
+        String sql = "UPDATE [user] SET user_password = ?, update_at = GETDATE() WHERE user_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean checkOldPassword(int userId, String oldPassword) {
+        String sql = "SELECT user_id FROM [user] WHERE user_id = ? AND user_password = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setString(2, oldPassword);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // Trả về true nếu tìm thấy bản ghi khớp
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean saveForgotPasswordCode(String email, String code) {
+        String sql = "UPDATE [user] SET forgot_password_code = ?, update_at = GETDATE() WHERE user_email = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ps.setString(2, email);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public User getUserByResetCode(String code) {
+        String sql = "SELECT * FROM [user] WHERE forgot_password_code = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                User user = new User();
+                user.setUserId(rs.getInt("user_id"));
+                user.setUserEmail(rs.getString("user_email"));
+                user.setUserName(rs.getString("user_name"));
+                user.setForgotPasswordCode(rs.getString("forgot_password_code"));
+                return user;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean resetPassword(int userId, String newPassword) {
+        String sql = "UPDATE [user] SET user_password = ?, forgot_password_code = NULL, update_at = GETDATE() WHERE user_id = ?";
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, newPassword);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    public int getUserCount() {
+        int count = 0;
+        String sql = "SELECT COUNT(*) FROM [user]";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                count = rs.getInt(1);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
 }
+

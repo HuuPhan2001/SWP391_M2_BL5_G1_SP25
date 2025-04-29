@@ -4,22 +4,23 @@
  */
 package vn.edu.fpt.controller;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Timestamp;
-import java.time.Instant;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.UUID;
 import vn.edu.fpt.dao.AccountDAO;
-import vn.edu.fpt.model.User;
+import vn.edu.fpt.dao.EmailUtility;
 
 /**
  *
  * @author ADMIN
  */
-@WebServlet(name = "UpdateProfileServlet", urlPatterns = {"/UpdateProfile"})
-public class UpdateProfileServlet extends HttpServlet {
+@WebServlet(name = "ForgotPasswordServlet", urlPatterns = {"/forgot-password"})
+public class ForgotPasswordServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +39,10 @@ public class UpdateProfileServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UpdateProfileServlet</title>");
+            out.println("<title>Servlet ForgotPasswordServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet UpdateProfileServlet at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet ForgotPasswordServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -73,52 +74,30 @@ public class UpdateProfileServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        try {
-            request.setCharacterEncoding("UTF-8");
+        String email = request.getParameter("email");
+        AccountDAO dao = new AccountDAO();
+        
+        if (dao.isEmailExists(email)) {
+            // Tạo mã reset random
+            String resetCode = UUID.randomUUID().toString();
+            
+            // Lưu mã vào database
+            dao.saveForgotPasswordCode(email, resetCode);
 
-            int userId = Integer.parseInt(request.getParameter("userId"));
-            String fullName = request.getParameter("userFullName");
-            String email = request.getParameter("userEmail");
-            String phone = request.getParameter("phone");
-            String address = request.getParameter("address");
-            String avatar = request.getParameter("userAvatar");
-            String cccd = request.getParameter("identificationNumber");
-
-            // Lấy user hiện tại từ session
-            HttpSession session = request.getSession();
-            User currentUser = (User) session.getAttribute("acc");
-
-            // Cập nhật các trường có thể sửa
-            currentUser.setUserFullName(fullName);
-            currentUser.setUserEmail(email);
-            currentUser.setPhone(phone);
-            currentUser.setAddress(address);
-            currentUser.setUserAvatar(avatar);
-            currentUser.setIdentificationNumber(cccd);
-            currentUser.setUpdateAt(Timestamp.from(Instant.now()));
-
-            // Gọi DAO để update
-            AccountDAO dao = new AccountDAO();
-
-            if (dao.isEmailExists(email)) {
-                // Ghi lỗi vào session
-                session.setAttribute("error", "Email đã tồn tại.");
-                response.sendRedirect("EditProfile.jsp");
-                return;
-            }
-
-            dao.updateUser(currentUser);
-
-            // Cập nhật lại session
-            session.setAttribute("acc", currentUser);
-
-            request.setAttribute("message", "Cập nhật thông tin thành công!");
-            request.getRequestDispatcher("UserProfile.jsp").forward(request, response);
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.getWriter().println("Có lỗi xảy ra: " + e.getMessage());
+            // Gửi email chứa đường link reset
+            String resetLink = request.getRequestURL().toString().replace("forgot-password", "reset-password") 
+                    + "?code=" + resetCode;
+            String subject = "Password Reset Request";
+            String message = "Click the link below to reset your password:\n" + resetLink;
+            
+            EmailUtility.sendEmail(email, subject, message);
+            request.setAttribute("message", "We have sent a password reset link to your email.");
+        } else {
+            request.setAttribute("message", "Email not found. Please try again.");
         }
+        request.getRequestDispatcher("ForgotPassword.jsp").forward(request, response);
     }
+    
 
     /**
      * Returns a short description of the servlet.
