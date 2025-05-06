@@ -52,8 +52,8 @@
                         <div class="search">
                             <form>
                                 <input type="text" value="Search " onfocus="this.value = '';" onblur="if (this.value == '') {
-                                this.value = 'Search';
-                            }">
+                                            this.value = 'Search';
+                                        }">
                                 <input type="submit" value="Go">
                             </form>
                         </div>
@@ -105,30 +105,20 @@
                                         </c:otherwise>
                                     </c:choose>
 
-                                <c:if test="${not empty sessionScope.acc}">
-                                    <li><a class="color1" href="<%=request.getContextPath()%>/category">Category</a></li>
-                                    <li><a class="color1" href="<%=request.getContextPath()%>/category-type">Category Type</a></li>
-                                    <li><a class="color1" href="<%=request.getContextPath()%>/product">Product</a></li>
-                                    <li><a class="color1" href="<%=request.getContextPath()%>/list-voucher">Voucher</a></li>
+                                <c:if test="${not empty sessionScope.acc and sessionScope.acc.roleId != 1}">
                                     <li><a class="color1" href="<%=request.getContextPath()%>/all-product">All Product</a></li>
-                                    <li><a class="color1" href="<%=request.getContextPath()%>/list-order">Order</a></li>
                                     </c:if>
-
-                                <li><a class="color1" href="#">Men</a> 
-                                    <!-- Men giữ nguyên -->
-                                </li>
-
-                                <li class="grid"><a class="color2" href="#">Women</a> 
-                                    <!-- Women giữ nguyên -->
-                                </li>
-
-                                <li><a class="color4" href="#">Blog</a></li>
 
                                 <c:choose>
                                     <c:when test="${not empty sessionScope.acc and sessionScope.acc.roleId == 1}">
                                         <li><a class="color6" href="<%=request.getContextPath()%>/UserList">User List</a></li>
-                                        </c:when>
-                                        <c:otherwise>
+                                        <li><a class="color1" href="<%=request.getContextPath()%>/category">Category</a></li>
+                                        <li><a class="color1" href="<%=request.getContextPath()%>/category-type">Category Type</a></li>
+                                        <li><a class="color1" href="<%=request.getContextPath()%>/product">Product</a></li>
+                                        <li><a class="color1" href="<%=request.getContextPath()%>/list-voucher">Voucher</a></li>
+                                        <li><a class="color1" href="<%=request.getContextPath()%>/list-order">Order</a></li>
+                                    </c:when>
+                                    <c:otherwise>
                                         <li><a class="color6" href="#">Contact</a></li>
                                         </c:otherwise>
                                     </c:choose>

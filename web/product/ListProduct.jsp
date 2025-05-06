@@ -81,7 +81,7 @@
                             <th>No.</th>
                             <th>Name</th>
                             <th>Avatar</th>
-                            <th>Price</th>
+                            <th>Price(VND)</th>
                             <th>Quantity</th>
                             <th>Status</th>
                             <th>Category</th>
@@ -97,7 +97,7 @@
                                 <td>${startIndex + loop.index + 1}</td>
                                 <td>${pro.productName}</td>
                                 <td><img src="${pro.productAvatar}" alt="Product avatar" class="product-avatar" /></td>
-                                <td>${pro.productPrice}</td>
+                                <td><fmt:formatNumber value="${pro.productPrice}" type="currency" currencySymbol="" /></td>
                                 <td>${pro.productQuantity}</td>
                                 <td><c:choose>
                                         <c:when test="${pro.status == 1}"><span class="badge bg-label-success me-1">Active</span></c:when>
@@ -109,8 +109,8 @@
                                         <div class="row">${cate.categoryName}</div>
                                     </c:forEach>
                                 </td>
-                                <td>${pro.createAt}</td>
-                                <td>${pro.updateAt}</td>
+                                <td><fmt:formatDate value="${pro.createAt}" pattern="dd/MM/yyyy HH:mm" /></td>
+                                <td><fmt:formatDate value="${pro.updateAt}" pattern="dd/MM/yyyy HH:mm" /></td>
                                 <td>
                                     <div class="dropdown">
                                         <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">

@@ -131,10 +131,10 @@ public class FeedbackService {
             } else {
                 request.getSession().setAttribute("errorMessage", Constant.DELETE_FAILED);
             }
-            response.sendRedirect("feedback");
+            response.sendRedirect("list-feedback");
         } catch (NumberFormatException e) {
             request.getSession().setAttribute("errorMessage", Constant.DELETE_FAILED + ": " + Constant.DATA_INVALID);
-            response.sendRedirect("feedback");
+            response.sendRedirect("list-feedback");
         }
     }
 
@@ -221,5 +221,9 @@ public class FeedbackService {
 
     public boolean createFeedbackDirect(UserFeedback feedback) {
         return feedbackDao.createFeedback(feedback);
+    }
+    
+    public UserFeedback getFeedbackById(int id){
+        return feedbackDao.getFeedbackById(id);
     }
 }

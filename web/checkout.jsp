@@ -245,7 +245,7 @@
                         <i class='bx bx-cart-alt empty-cart-icon'></i>
                         <h3>Your cart is empty</h3>
                         <p>Looks like you haven't added any products to your cart yet.</p>
-                        <a href="<%=request.getContextPath()%>/products" class="btn btn-primary">Continue Shopping</a>
+                        <a href="<%=request.getContextPath()%>/all-product" class="btn btn-primary">Continue Shopping</a>
                     </div>
                 </c:when>
                 <c:otherwise>
@@ -304,7 +304,7 @@
                             </div>
 
                             <div class="cart-actions">
-                                <a href="<%=request.getContextPath()%>/product" class="btn btn-secondary">Continue Shopping</a>
+                                <a href="<%=request.getContextPath()%>/all-product" class="btn btn-secondary">Continue Shopping</a>
                                 <form action="<%=request.getContextPath()%>/checkout" method="post">
                                     <button type="submit" class="btn btn-primary checkout-btn">Proceed to Checkout</button>
                                 </form>

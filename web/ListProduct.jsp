@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -265,7 +266,7 @@
                                 </div>
                                 <p class="tun">${product.productName}</p>
                                 <a href="javascript:;" class="item_add">
-                                    <p class="number item_price"><i> </i>$${product.productPrice}</p>
+                                    <p class="number item_price"><i> </i><fmt:formatNumber value="${product.productPrice}" type="currency" currencySymbol="VND" /></p>
                                     <input type="hidden" class="item_name" value="${product.productName}">
                                     <input type="hidden" class="item_product_id" value="${product.productId}">
                                     <input type="hidden" class="item_quantity" value="1">

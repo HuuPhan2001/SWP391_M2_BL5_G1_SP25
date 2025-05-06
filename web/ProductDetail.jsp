@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -192,7 +193,7 @@
                             <div class="clearfix"> </div>
                         </div>
 
-                        <h5 class="item_price">$${product.productPrice}</h5>
+                        <h5 class="item_price"><fmt:formatNumber value="${product.productPrice}" type="currency" currencySymbol="VND" /></h5>
                         <p>${product.productDesc}</p>
                         <div class="available">
                             <ul>
@@ -290,13 +291,14 @@
                                 <div id="feedbackForm" class="mb-4">
                                     <h5>Write a Review</h5>
                                     <form id="submitFeedbackForm" onsubmit="return submitFeedback(event)">
+                                        <input type="hidden" id="feedbackId" name="feedbackId" value="" />
                                         <input type="hidden" name="productId" id="productId" value="${product.productId}" />
                                         <input type="hidden" name="userId" id="userId" value="${sessionScope.acc.userId}" />
                                         <input type="hidden" name="feedbackId" id="feedbackId" id="editFeedbackId" value="" />
 
-                                        <div class="mb-3">
-                                            <label class="form-label">Rating</label>
-                                            <div class="rating" style="display: flex; justify-content: center; gap: 5px;">
+                                        <div class="row mb-3">
+                                            <label class="col-form-label col-2" style="vertical-align: central">Rating</label>
+                                            <div class="rating col-10 rating-form" style="gap: 5px;">
                                                 <c:forEach begin="1" end="5" var="i">
                                                     <input type="radio" name="rating" value="${i}" id="star${i}" style="display: none;" required>
                                                     <label for="star${i}" style="cursor: pointer; font-size: 32px; color: #ccc;">
@@ -310,9 +312,11 @@
                                             <label for="feedbackComment" class="form-label">Your Review</label>
                                             <textarea class="form-control" id="feedbackComment" name="comment" rows="3" required></textarea>
                                         </div>
+                                        <div class="mb-3 row d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-primary col-md-2" id="feedbackSubmitBtn">Submit Review</button>
+                                            <button type="button" class="btn btn-secondary col-md-2" id="cancelEditBtn" style="display: none;" onclick="cancelEdit()">Cancel Edit</button>
+                                        </div>
 
-                                        <button type="submit" class="btn btn-primary" id="feedbackSubmitBtn">Submit Review</button>
-                                        <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display: none;" onclick="cancelEdit()">Cancel Edit</button>
                                     </form>
                                 </div>
 
@@ -324,9 +328,12 @@
                                                 <strong>${feedback.userName}</strong>
                                                 <c:if test="${sessionScope.acc.userId == feedback.userId}">
                                                     <div>
-                                                        <button class="btn btn-sm btn-outline-primary" onclick="editFeedback(${feedback.feedbackId})">
-                                                            <i class="bx bx-edit-alt me-1"></i>
-                                                        </button>
+                                                        <c:if test="${acc.userId eq feedback.userId}">
+                                                            <button type="button" class="btn btn-primary" onclick="getFeedback(${feedback.feedbackId})">
+                                                                <i class="bx bx-edit-alt me-1"></i> Edit
+                                                            </button>
+                                                        </c:if>
+
                                                         <button class="btn btn-sm btn-outline-danger" onclick="deleteFeedback(${feedback.feedbackId})">
                                                             <i class="bx bx-trash me-1"></i>
                                                         </button>
@@ -558,42 +565,37 @@
             return false;
         }
 
-        function editFeedback(feedbackId) {
-            if (!feedbackId) {
-                console.error('No feedback ID provided');
-                return;
-            }
-
+        function getFeedback(feedbackId) {
             $.ajax({
-                url: 'get-feedback?id=' + feedbackId,
+                url: 'ajax-get-feedback',
                 type: 'GET',
-                dataType: 'json',
-                success: function (feedback) {
-                    if (feedback && feedback.feedbackId) {
-                        $('#editFeedbackId').val(feedback.feedbackId);
-                        $('#feedbackComment').val(feedback.feedbackComment);
+                data: {
+                    feedbackId: feedbackId
+                },
+                success: function (response) {
+                    if (response.success) {
+                        console.log(response.data);
+                        console.log(response);
+                        $('#feedbackForm').attr('action', 'edit-feedback');
+                        $('#feedbackId').val(response.feedbackId);
+                        $('#rating').val(response.rating);
+                        $('#feedbackComment').val(response.comment);
 
-                        const rating = Math.round(feedback.feedbackRating);
-                        const ratingInput = $(`input[name="rating"][value="${rating}"]`);
-                        if (ratingInput.length) {
-                            ratingInput.prop('checked', true);
-                        }
+                        $('#submitButton').text('Update Feedback');
 
-                        $('#cancelEditBtn').show();
-                        $('#feedbackSubmitBtn').text('Update Review');
-
-                        $('#feedbackComment')[0].scrollIntoView({behavior: 'smooth'});
-                        $('#feedbackComment').focus();
+                        $('html, body').animate({
+                            scrollTop: $("#feedbackForm").offset().top
+                        }, 500);
                     } else {
-                        alert('Could not load feedback for editing');
+                        alert(response.message);
                     }
                 },
-                error: function (xhr, status, error) {
-                    console.error('Error:', error);
-                    alert('Error loading feedback');
+                error: function () {
+                    alert('Error getting feedback data');
                 }
             });
         }
+
 
         function cancelEdit() {
             const form = document.getElementById('submitFeedbackForm');
@@ -665,6 +667,11 @@
                     })
                     .catch(error => console.error('Error:', error));
         }
-
+        function resetFeedbackForm() {
+            $('#feedbackForm').attr('action', 'create-feedback');
+            $('#feedbackId').val('');
+            $('#feedbackForm')[0].reset();
+            $('#submitButton').text('Submit');
+        }
     </script>
 </html>

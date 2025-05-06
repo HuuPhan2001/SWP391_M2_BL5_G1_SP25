@@ -5,6 +5,7 @@
 package vn.edu.fpt.controller;
 
 import com.google.gson.JsonObject;
+import jakarta.servlet.annotation.MultipartConfig;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
@@ -12,17 +13,19 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.sql.Timestamp;
+import vn.edu.fpt.common.Constant;
 import vn.edu.fpt.model.User;
 import vn.edu.fpt.model.UserFeedback;
 import vn.edu.fpt.service.FeedbackService;
-import java.sql.SQLException;
 
 /**
  *
  * @author MTTTT
  */
-@WebServlet("/ajax-feedback")
-public class CreateFeedback extends HttpServlet {
+@MultipartConfig
+@WebServlet("/ajax-update-feedback")
+public class UpdateFeedbackServlet extends HttpServlet {
 
     private FeedbackService feedbackService;
 
@@ -43,26 +46,43 @@ public class CreateFeedback extends HttpServlet {
                 return;
             }
 
-            String productId = request.getParameter("productId");
-            String rating = request.getParameter("rating");
+            String feedbackIdRaw = request.getParameter("feedbackId");
+            String ratingRaw = request.getParameter("rating");
             String comment = request.getParameter("comment");
 
-            System.out.println("rating: " + rating);
-            System.out.println("productId: " + productId);
-            System.out.println("comment: " + comment);
+            if (feedbackIdRaw == null || ratingRaw == null || comment == null) {
+                request.getSession().setAttribute("errorMessage", Constant.UPDATE_FAILED + ": " + Constant.DATA_INVALID);
+                response.sendRedirect("feedback");
+                return;
+            }
+
+            int feedbackId = Integer.parseInt(feedbackIdRaw);
+            UserFeedback existingFeedback = feedbackService.getFeedbackById(feedbackId);
+            if (existingFeedback == null) {
+                request.getSession().setAttribute("errorMessage", Constant.UPDATE_FAILED + ": Feedback not found");
+                response.sendRedirect("feedback");
+                return;
+            }
+
+            String productId = request.getParameter("productId");
+            String rating = request.getParameter("rating");
 
             if (productId == null || rating == null) {
                 sendJsonResponse(response, false, "Missing required parameters");
                 return;
             }
 
-            UserFeedback feedback = new UserFeedback();
-            feedback.setUserId(user.getUserId());
-            feedback.setProductId(Integer.parseInt(productId));
-            feedback.setFeedbackRating(Float.parseFloat(rating));
-            feedback.setFeedbackComment(comment != null ? comment : "");
+            existingFeedback.setFeedbackRating(Float.parseFloat(ratingRaw));
+            existingFeedback.setFeedbackComment(comment.trim());
+            existingFeedback.setUpdateAt(new Timestamp(System.currentTimeMillis()));
 
-            boolean success = feedbackService.createFeedbackDirect(feedback);
+            if (existingFeedback.getFeedbackComment().isEmpty() || existingFeedback.getFeedbackComment().length() >= 1000) {
+                request.getSession().setAttribute("errorMessage", Constant.UPDATE_FAILED + ": " + Constant.DATA_INVALID);
+                response.sendRedirect("feedback");
+                return;
+            }
+
+            boolean success = feedbackService.updateFeedbackDirect(existingFeedback);
             String message = success ? "Feedback submitted successfully" : "Error submitting feedback";
 
             sendJsonResponse(response, success, message);
@@ -83,5 +103,4 @@ public class CreateFeedback extends HttpServlet {
         out.print(jsonResponse.toString());
         out.flush();
     }
-
 }
