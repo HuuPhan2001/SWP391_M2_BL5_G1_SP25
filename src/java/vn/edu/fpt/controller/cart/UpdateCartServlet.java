@@ -26,6 +26,12 @@ public class UpdateCartServlet extends HttpServlet {
 
             HttpSession session = request.getSession();
             List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartItems");
+            
+              if (quantity <1 || quantity > 99) {
+                response.setContentType("application/json");
+                response.getWriter().write("{\"success\": false, \"error\": \"Số lượng tối đa cho mỗi sản phẩm là 99\"}");
+                return;
+            }
 
             if (cartItems != null) {
                 boolean itemUpdated = false;
