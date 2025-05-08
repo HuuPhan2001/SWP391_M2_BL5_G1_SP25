@@ -73,7 +73,7 @@
                                     </c:if>
                             </ul>
                             <div class="cart box_1">
-                                <a href="<%=request.getContextPath()%>/checkout" class="cart-link">
+                                <a href="<%=request.getContextPath()%>/cart" class="cart-link">
                                     <div class="cart-icon">
                                         <i class="bx bx-cart"></i>
                                         <span class="cart-count">${sessionScope.totalItems != null ? sessionScope.totalItems : 0}</span>
