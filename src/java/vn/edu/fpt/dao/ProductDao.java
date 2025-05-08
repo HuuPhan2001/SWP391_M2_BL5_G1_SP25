@@ -124,6 +124,21 @@ public class ProductDao extends DbContext {
         return result;
     }
 
+    public boolean updateProduct(Product product) {
+        String sql = "UPDATE product SET product_quantity = ?, update_at = ? WHERE product_id = ?";
+        try (Connection conn = DbContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, product.getProductQuantity());
+            ps.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
+            ps.setInt(3, product.getProductId());
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     public List<ProductCategoryDto> getCategoryListByProductId(int product_id) {
         List<ProductCategoryDto> list = new ArrayList<>();
         String sql = "SELECT pc.product_id, p.product_name, pc.product_category_id, pc.category_id, c.category_name\n"

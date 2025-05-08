@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 import vn.edu.fpt.config.DbContext;
+import static vn.edu.fpt.config.DbContext.getConnection;
 import vn.edu.fpt.model.Order;
 import vn.edu.fpt.model.OrderDetail;
 
@@ -75,6 +76,18 @@ public class OrderDao extends DbContext {
         return "ORD-" + uuid.toUpperCase();
     }
 
+    public boolean deleteOrder(int orderId) {
+        String sql = "DELETE FROM [order] WHERE order_id = ?";
+        try (Connection conn = DbContext.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            int rows = ps.executeUpdate();
+            return rows > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     /**
      * Update an order's payment status
