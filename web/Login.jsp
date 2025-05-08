@@ -35,7 +35,14 @@
         <!--header-->
         <jsp:include page="Header.jsp" />
 
-
+        <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+        <c:if test="${not empty sessionScope.success}">
+            <div class="alert alert-success">${sessionScope.success}</div>
+            <c:remove var="success" scope="session" />
+        </c:if>
+        <c:if test="${not empty error}">
+            <div class="alert alert-danger" style="margin: 10px 0;">${error}</div>
+        </c:if>
         <!--content-->
         <div class="container">
             <div class="account">

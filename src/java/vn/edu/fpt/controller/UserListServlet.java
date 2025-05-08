@@ -32,6 +32,7 @@ public class UserListServlet extends HttpServlet {
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
+    
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -40,7 +41,7 @@ public class UserListServlet extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet UserListServlet</title>");            
+            out.println("<title>Servlet UserListServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet UserListServlet at " + request.getContextPath() + "</h1>");
@@ -61,12 +62,19 @@ public class UserListServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-         AdminDAO dao = new AdminDAO();
-        List<User> userList = dao.getAllUsers();
-        
+        String keyword = request.getParameter("keyword");
+        AdminDAO dao = new AdminDAO();
+        List<User> userList;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            userList = dao.searchUsers(keyword);
+        } else {
+            userList = dao.getAllUsers();
+        }
+
         request.setAttribute("userList", userList);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("userlist.jsp");
-        dispatcher.forward(request, response);
+        request.setAttribute("keyword", keyword); // để giữ lại nội dung tìm kiếm trên form
+        request.getRequestDispatcher("userlist.jsp").forward(request, response);
     }
 
     /**
