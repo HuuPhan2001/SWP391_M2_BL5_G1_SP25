@@ -28,6 +28,8 @@ public class CheckoutServlet extends HttpServlet {
         List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartItems");
         if (cartItems != null && !cartItems.isEmpty()) {
             List<CartItem> cartItemsWithDetails = new ArrayList<>();
+            
+   
 
             for (CartItem item : cartItems) {
                 Product product = productDao.getProductById(item.getProductId());
@@ -37,6 +39,11 @@ public class CheckoutServlet extends HttpServlet {
                     item.setProductAvatar(product.getProductAvatar());
                     cartItemsWithDetails.add(item);
                 }
+                   if (item.getQuantity() > 100) {
+        session.setAttribute("errorMessage", "Không thể thanh toán: Số lượng sản phẩm \"" + item.getProductName() + "\" vượt quá 100.");
+        response.sendRedirect(request.getContextPath() + "/checkout");
+        return;
+    }
             }
 
             request.setAttribute("cartItems", cartItemsWithDetails);
