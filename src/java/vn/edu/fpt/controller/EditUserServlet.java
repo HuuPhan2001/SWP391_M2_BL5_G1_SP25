@@ -4,22 +4,21 @@
  */
 package vn.edu.fpt.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import vn.edu.fpt.dao.AccountDAO;
-import vn.edu.fpt.model.User;
+import vn.edu.fpt.dao.AdminDAO;
 
 /**
  *
  * @author ADMIN
  */
-@WebServlet(name = "Register", urlPatterns = {"/Register"})
-public class Register extends HttpServlet {
+@WebServlet(name = "EditUserServlet", urlPatterns = {"/EditUser"})
+public class EditUserServlet extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,10 +37,10 @@ public class Register extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Register</title>");            
+            out.println("<title>Servlet EditUserServlet</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Register at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet EditUserServlet at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -73,61 +72,44 @@ public class Register extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            // Lấy dữ liệu từ form
-        String userName = request.getParameter("username");
-        String phone = request.getParameter("phone");
-        String email = request.getParameter("email");
-        String password = request.getParameter("password");
-        String confirmPassword = request.getParameter("confirmPassword");
+          String action = request.getParameter("action");
+        String idParam = request.getParameter("userId");
 
-        // Kiểm tra xác nhận mật khẩu
-        if (!password.equals(confirmPassword)) {
-            request.setAttribute("error", "Mật khẩu nhập lại không trùng khớp.");
-            request.getRequestDispatcher("Register.jsp").forward(request, response);
+        if (action == null || idParam == null) {
+            response.sendRedirect("UserList?error=invalid");
             return;
         }
 
-//        try {
-            AccountDAO dao = new AccountDAO();
-            // Kiểm tra Username đã tồn tại chưa
-            if (dao.isUsernameExists(userName)) {
-                request.setAttribute("error", "Username đã được sử dụng.");
-                request.getRequestDispatcher("Register.jsp").forward(request, response);
-                return;
+        try {
+            int userId = Integer.parseInt(idParam);
+            AdminDAO dao = new AdminDAO();
+            boolean result = false;
+
+            switch (action) {
+                case "delete":
+                    result = dao.deleteUser(userId);
+                    break;
+                case "lock":
+                    result = dao.updateUserStatus(userId, 0);
+                    break;
+                case "unlock":
+                    result = dao.updateUserStatus(userId, 1);
+                    break;
+                default:
+                    response.sendRedirect("UserList?error=invalid-action");
+                    return;
             }
-            // Kiểm tra email đã tồn tại chưa
-            if (dao.isEmailExists(email)) {
-                request.setAttribute("error", "Email đã được sử dụng.");
-                request.getRequestDispatcher("Register.jsp").forward(request, response);
-                return;
-            }
 
-            // Tạo user mới
-            User user = new User();
-            user.setUserName(userName);
-            user.setPhone(phone);
-            user.setUserEmail(email);
-            user.setUserPassword(password); // có thể mã hóa sau nếu cần
-            user.setStatus(1);
-            user.setRoleId(3); // user thường
-
-            boolean success = dao.addAccount(user);
-
-            if (success) {
-                request.getSession().setAttribute("success", "Đăng ký thành công.");
-                response.sendRedirect("Login.jsp");
+            if (result) {
+                response.sendRedirect("UserList?success=" + action);
             } else {
-                request.setAttribute("error", "Failed to register. Please try again.");
-                request.getRequestDispatcher("Register.jsp").forward(request, response);
+                response.sendRedirect("UserList?error=" + action);
             }
-//
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            request.setAttribute("error", "Internal server error.");
-//            request.getRequestDispatcher("register.jsp").forward(request, response);
-//        }
+
+        } catch (NumberFormatException e) {
+            response.sendRedirect("UserList?error=invalid-id");
+        }
     }
-        
     
 
     /**

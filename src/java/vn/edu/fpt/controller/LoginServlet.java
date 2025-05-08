@@ -84,6 +84,12 @@ public class LoginServlet extends HttpServlet {
             User user = dao.getAccount(username, password);
 
             if (user != null) {
+                if (user.getStatus() == 0) {
+                // Tài khoản bị khóa
+                request.setAttribute("error", "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
+                request.getRequestDispatcher("Login.jsp").forward(request, response);
+                return;
+            }
                 HttpSession session = request.getSession();
                 session.setAttribute("acc", user);
                 Integer roleId = user.getRoleId();
@@ -116,7 +122,7 @@ public class LoginServlet extends HttpServlet {
 
             } else {
                 // Sai thông tin đăng nhập
-                request.setAttribute("error", "Email hoặc mật khẩu không đúng!");
+                request.setAttribute("error", "Username hoặc mật khẩu không đúng!");
                 request.getRequestDispatcher("Login.jsp").forward(request, response);
 
             }

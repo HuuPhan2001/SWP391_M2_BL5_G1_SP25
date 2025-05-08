@@ -213,10 +213,8 @@ public class AccountDAO extends DbContext {
     public int getUserCount() {
         int count = 0;
         String sql = "SELECT COUNT(*) FROM [user]";
-        try (Connection conn = getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
-
+        try (Connection conn = getConnection(); PreparedStatement ps = conn.prepareStatement(sql); 
+            ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
                 count = rs.getInt(1);
             }
@@ -227,4 +225,3 @@ public class AccountDAO extends DbContext {
         return count;
     }
 }
-
