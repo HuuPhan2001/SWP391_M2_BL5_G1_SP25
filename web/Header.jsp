@@ -78,6 +78,7 @@
                             <i class="bx bx-cart"></i>
                             <span class="cart-count">${sessionScope.totalItems != null ? sessionScope.totalItems : 0}</span>
                         </div>
+<<<<<<< Updated upstream
                         <div class="cart-info">
                             <span class="cart-total">${sessionScope.totalPrice != null ? '$'.concat(sessionScope.totalPrice) : '$0.00'}</span>
                         </div>
@@ -123,6 +124,28 @@
                                             <li><a href="#">Long Sleeve T-Shirts</a></li>
                                             <li><a href="#">Loungewear</a></li>
                                         </ul>
+=======
+                        <div class="header-left">
+                            <ul>
+                                <c:if test="${not empty sessionScope.acc}">
+                                    <li>
+                                        <a style="font-size: 25px" href="userInfo?accId=${sessionScope.acc.userName}">
+                                            Hello ${sessionScope.acc.userName}
+                                        </a>
+                                    </li>
+                                    <li><a style="font-size: 25px" href="logout">Logout</a></li>
+                                    </c:if>
+
+                                <c:if test="${empty sessionScope.acc}">
+                                    <li><a style="font-size: 25px" href="Login.jsp">Login</a></li>
+                                    </c:if>
+                            </ul>
+                            <div class="cart box_1">
+                                <a href="<%=request.getContextPath()%>/cart" class="cart-link">
+                                    <div class="cart-icon">
+                                        <i class="bx bx-cart"></i>
+                                        <span class="cart-count">${sessionScope.totalItems != null ? sessionScope.totalItems : 0}</span>
+>>>>>>> Stashed changes
                                     </div>
                                 </div>
                                 <div class="col1">
