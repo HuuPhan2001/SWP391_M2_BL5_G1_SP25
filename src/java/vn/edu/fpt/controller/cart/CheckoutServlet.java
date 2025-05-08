@@ -29,41 +29,12 @@ public class CheckoutServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-<<<<<<< Updated upstream
-        List<CartItem> cartItems = (List<CartItem>) session.getAttribute("cartItems");
-        if (cartItems != null && !cartItems.isEmpty()) {
-            List<CartItem> cartItemsWithDetails = new ArrayList<>();
-            
-   
-
-            for (CartItem item : cartItems) {
-                Product product = productDao.getProductById(item.getProductId());
-                if (product != null) {
-                    item.setProductName(product.getProductName());
-                    item.setProductPrice(product.getProductPrice());
-                    item.setProductAvatar(product.getProductAvatar());
-                    cartItemsWithDetails.add(item);
-                }
-                   if (item.getQuantity() > 100) {
-        session.setAttribute("errorMessage", "Không thể thanh toán: Số lượng sản phẩm \"" + item.getProductName() + "\" vượt quá 100.");
-        response.sendRedirect(request.getContextPath() + "/checkout");
-        return;
-    }
-            }
-
-            request.setAttribute("cartItems", cartItemsWithDetails);
-            request.setAttribute("totalPrice", session.getAttribute("totalPrice"));
-        } else {
-            request.setAttribute("cartItems", new ArrayList<CartItem>());
-            request.setAttribute("totalPrice", 0);
-=======
         User user = (User) session.getAttribute("acc");
         
         // Check if user is logged in
         if (user == null) {
             response.sendRedirect(request.getContextPath() + "/login?redirect=checkout");
             return;
->>>>>>> Stashed changes
         }
 
         // Get cart items
