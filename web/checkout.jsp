@@ -31,76 +31,6 @@
                 border: 1px solid #ddd;
                 border-radius: 4px;
             }
-<<<<<<< Updated upstream
-        }
-        #notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-        }
-
-        .notification {
-            background-color: #4CAF50;
-            color: white;
-            padding: 12px 20px;
-            margin-bottom: 10px;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            opacity: 0;
-            transform: translateY(-20px);
-            transition: all 0.3s ease;
-        }
-
-        .notification.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .notification.error {
-            background-color: #f44336;
-        }
-
-        .cart-count.updated, .cart-total.updated {
-            animation: highlight 1s ease;
-        }
-
-        @keyframes highlight {
-            0% { color: inherit; }
-            50% { color: #4CAF50; }
-            100% { color: inherit; }
-        }
-
-        .pro-grid:hover .buy-in {
-            background-color: #4CAF50;
-            transition: background-color 0.3s ease;
-        }
-
-        .item_add {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .item_add:hover {
-            opacity: 0.8;
-        }
-    </style>
-
-</head>
-<body>
-<div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h2>Your Shopping Cart</h2>
-
-            <c:choose>
-                <c:when test="${empty cartItems || cartItems.size() == 0}">
-                    <div class="empty-cart">
-                        <i class='bx bx-cart-alt empty-cart-icon'></i>
-                        <h3>Your cart is empty</h3>
-                        <p>Looks like you haven't added any products to your cart yet.</p>
-                        <a href="<%=request.getContextPath()%>/products" class="btn btn-primary">Continue Shopping</a>
-=======
             .order-summary {
                 background: #f8f9fa;
                 padding: 20px;
@@ -194,7 +124,6 @@
                             <input type="hidden" name="shipCost" value="0">
                             <input type="hidden" name="discount" value="0">
                         </form>
->>>>>>> Stashed changes
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -214,30 +143,6 @@
                                     </div>
                                 </div>
                             </c:forEach>
-<<<<<<< Updated upstream
-                            </tbody>
-                        </table>
-
-                        <div class="cart-summary">
-                            <div class="cart-summary-row">
-                                <span>Subtotal:</span>
-                                <span class="subtotal">$${totalPrice}</span>
-                            </div>
-                            <div class="cart-summary-row">
-                                <span>Shipping:</span>
-                                <span class="shipping">Calculated at checkout</span>
-                            </div>
-                            <div class="cart-summary-row total">
-                                <span>Total:</span>
-                                <span class="total-price">$${totalPrice}</span>
-                            </div>
-
-                            <div class="cart-actions">
-                                <a href="<%=request.getContextPath()%>/product" class="btn btn-secondary">Continue Shopping</a>
-                                <form action="<%=request.getContextPath()%>/checkout" method="post">
-                                    <button type="submit" class="btn btn-primary checkout-btn">Proceed to Checkout</button>
-                                </form>
-=======
                         </div>
                         <hr>
                         <div class="order-total">
@@ -248,7 +153,6 @@
                                 <div class="col-6 text-right">
                                     <h4>$${totalPrice}</h4>
                                 </div>
->>>>>>> Stashed changes
                             </div>
                         </div>
                         <button type="submit" form="checkoutForm" class="btn-checkout">Place Order</button>
@@ -290,3 +194,4 @@
         </script>
     </body>
 </html> 
+
